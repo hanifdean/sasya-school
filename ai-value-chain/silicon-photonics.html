@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Silicon Photonics - Learning Hub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-2: #141421;
+    --border: #1e1e2e;
+    --text: #e8e8ed;
+    --muted: #9ca3af;
+    --accent: #06b6d4;
+    --blue: #60a5fa;
+    --green: #22c55e;
+    --purple: #a78bfa;
+    --teal: #2dd4bf;
+    --pink: #f472b6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 32px 20px 80px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #0f172a; color: #7dd3fc; border: 1px solid #1e293b;
+    padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  }
+  .hero {
+    background: radial-gradient(circle at top left, rgba(6,182,212,0.18), transparent 55%),
+                radial-gradient(circle at top right, rgba(96,165,250,0.15), transparent 45%),
+                var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    margin: 12px 0 10px;
+  }
+  .hero p { color: var(--muted); max-width: 820px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .card h3 { font-size: 16px; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 13px; }
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 24px 0 12px;
+  }
+  .why-now {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    display: grid;
+    gap: 16px;
+  }
+  .transition {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .node {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+  .node .label { font-size: 12px; color: var(--muted); }
+  .node .value { font-weight: 700; margin-top: 6px; }
+  .arrow {
+    font-size: 26px; color: var(--accent); font-weight: 800;
+  }
+  .wave {
+    height: 6px; border-radius: 999px; background: linear-gradient(90deg, #60a5fa, #06b6d4, #a78bfa);
+    margin-top: 10px;
+  }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+    background: #0f172a; color: #7dd3fc; border: 1px solid #1e293b;
+  }
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;
+  }
+  .stat {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+  }
+  .stat .num { font-size: 20px; font-weight: 800; color: #7dd3fc; }
+  .stat .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  details + details { margin-top: 12px; }
+  summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  summary::after {
+    content: "▾";
+    color: var(--muted);
+    transition: transform 0.2s ease;
+  }
+  details[open] summary::after { transform: rotate(180deg); }
+  details p { color: var(--muted); font-size: 13px; margin-top: 10px; }
+
+  .value-chain {
+    display: grid; gap: 16px;
+  }
+  .layer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .layer h4 { font-size: 15px; margin-bottom: 10px; }
+  .companies { display: flex; flex-wrap: wrap; gap: 10px; }
+  .company {
+    display: flex; align-items: center; gap: 8px;
+    background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 8px 10px;
+    font-size: 12px; font-weight: 600;
+  }
+  .logo {
+    width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font-size: 11px; font-weight: 800;
+  }
+  .design { color: var(--blue); }
+  .design .logo { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.4); }
+  .foundry { color: var(--green); }
+  .foundry .logo { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.4); }
+  .light { color: var(--purple); }
+  .light .logo { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.4); }
+  .test { color: var(--teal); }
+  .test .logo { background: rgba(45,212,191,0.15); color: var(--teal); border: 1px solid rgba(45,212,191,0.4); }
+  .layer-label {
+    font-size: 12px; font-weight: 700; margin-bottom: 8px;
+    display: inline-flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 999px;
+  }
+  .layer-label.design { background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.4); }
+  .layer-label.foundry { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.4); }
+  .layer-label.light { background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.4); }
+  .layer-label.test { background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.4); }
+
+  .insights {
+    display: grid; gap: 12px;
+  }
+  .insight {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .insight h4 { font-size: 14px; margin-bottom: 6px; }
+  .insight p { font-size: 13px; color: var(--muted); }
+
+  .source {
+    margin-top: 26px; font-size: 12px; color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 20px 14px 60px; }
+    .hero { padding: 20px; }
+    .transition { grid-template-columns: 1fr; text-align: center; }
+    .arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <span class="pill">L5.5 • Photonics Bridge</span>
+      <h1>Silicon Photonics: The Next Fabless Revolution</h1>
+      <p>
+        When electrons hit the power wall, light takes over. Silicon photonics turns CMOS fabs into optical highways,
+        enabling massive bandwidth inside chips and data centers - without building new fabs.
+      </p>
+      <div class="wave"></div>
+    </div>
+
+    <!-- ROBIN'S TLDR -->
+    <div class="card" style="border-color:#06b6d4;background:linear-gradient(135deg,rgba(6,182,212,0.08),transparent 60%),var(--surface);margin-bottom:24px;">
+      <h3 style="color:#06b6d4;font-size:14px;margin-bottom:8px;">🐱 Robin's TLDR — What is this really about?</h3>
+      <p style="font-size:14px;color:var(--text);line-height:1.7;">
+        <strong>The one-liner:</strong> Data centers are drowning in heat because copper wires can't keep up. Silicon photonics replaces copper with <em>light</em> inside chips — and the genius part is it reuses the same old factories that make regular chips.
+      </p>
+      <p style="font-size:14px;color:var(--text);line-height:1.7;margin-top:10px;">
+        <strong>Think of it like this:</strong> Imagine a highway system (copper wires) that was built for 1990s traffic. Now you need it to handle 1000x more cars. You can't just add more lanes — the road itself melts from friction. Silicon photonics is like replacing the asphalt highway with a fiber-optic rail system — same land, same route, but now cars are replaced by beams of light that don't create heat and don't crash into each other.
+      </p>
+      <p style="font-size:14px;color:var(--text);line-height:1.7;margin-top:10px;">
+        <strong>Why investors care:</strong> This isn't "future tech" anymore. AI data centers physically <em>cannot</em> scale further without this. And the companies that win aren't necessarily building new things — they're the ones who can cheaply convert existing chip factories to make optical chips. That's the moat.
+      </p>
+    </div>
+
+    <div class="section-title">Why Now?</div>
+    <div class="why-now">
+      <div class="transition">
+        <div class="node">
+          <div class="label">Copper / Electrons</div>
+          <div class="value">Fermions collide → heat + interference</div>
+          <div class="badge">Great for compute</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node">
+          <div class="label">Light / Photons</div>
+          <div class="value">Bosons coexist → WDM bandwidth</div>
+          <div class="badge">Perfect for transmission</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Power Wall Problem</h3>
+        <p>
+          Exponential data growth makes copper wiring bandwidth-limited and heat-constrained. The industry needs
+          electrons for computation and photons for transmission — now a necessity, not an option.
+        </p>
+      </div>
+      <!-- Robin's simple explanation -->
+      <div class="card" style="border-left:3px solid #06b6d4;border-radius:0 14px 14px 0;">
+        <p style="font-size:13px;color:#7dd3fc;font-weight:600;margin-bottom:6px;">🐱 Simply put</p>
+        <p style="font-size:13px;color:var(--muted);">
+          <strong>Electrons vs Photons</strong> = think of it as "balls vs ghosts." Electrons are like billiard balls — they crash into each other, create friction, generate heat. The faster you push them through copper, the worse it gets. Photons (light particles) are like ghosts — they pass right through each other. You can send millions of light signals through the same wire simultaneously (that's WDM), and they don't interfere or heat up. That's why fiber optic internet is so much faster than old copper DSL — same principle, now being applied <em>inside</em> the chip itself.
+        </p>
+      </div>
+    </div>
+
+    <div class="section-title">Key Shifts (Tap to Expand)</div>
+    <details open>
+      <summary>Second Fabless Revolution: From Physics to Architecture</summary>
+      <p>
+        Optical design once demanded Maxwell-level physics expertise. Today, PDKs abstract the nanometer complexity
+        and EPDA tools merge electronics + photonics. The center of gravity shifts to system architects who design
+        scalable optical platforms.
+      </p>
+      <div style="margin-top:12px;padding:12px;background:#0a0a14;border-radius:10px;border-left:3px solid #06b6d4;">
+        <p style="font-size:13px;color:#7dd3fc;font-weight:600;margin-bottom:4px;">🐱 Simply put</p>
+        <p style="font-size:13px;color:var(--muted);">
+          Remember how in the 1980s, chip companies stopped needing their own factories? That was the first "fabless revolution" — companies like Nvidia just <em>designed</em> chips and let TSMC build them. The same thing is now happening with optical chips. You used to need a PhD in physics to design anything with light on silicon. Now there are software tools (like Photoshop but for photonic circuits) that let engineers drag-and-drop optical components. The barrier to entry just collapsed.
+        </p>
+      </div>
+    </details>
+    <details>
+      <summary>Economic Moat: CMOS Infrastructure Reuse</summary>
+      <p>
+        Silicon photonics reuses existing CMOS fabs (Intel, TSMC, GlobalFoundries). Light wavelengths (1.31µm, 1.55µm)
+        are far larger than electron paths, so legacy 65-130nm processes are ideal. Tower Semiconductor even leverages
+        Intel's depreciated 65nm Fab 11X — massive capital efficiency with zero new fab buildout.
+      </p>
+      <div style="margin-top:12px;padding:12px;background:#0a0a14;border-radius:10px;border-left:3px solid #06b6d4;">
+        <p style="font-size:13px;color:#7dd3fc;font-weight:600;margin-bottom:4px;">🐱 Simply put</p>
+        <p style="font-size:13px;color:var(--muted);">
+          This is the killer insight. Building a cutting-edge chip factory costs $20B+. But silicon photonics doesn't <em>need</em> cutting-edge. Light is physically bigger than electrons, so you can use "old" 65nm equipment that's already been paid off. It's like discovering your 15-year-old printer can print money. Tower Semiconductor literally uses Intel's old depreciated factory — zero new capex, world-class optical chips. <strong>That's why this is investable now, not in 10 years.</strong>
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Key Jargon Decoded</summary>
+      <div style="margin-top:10px;display:grid;gap:10px;">
+        <div style="padding:10px;background:#0a0a14;border-radius:10px;">
+          <p style="font-size:13px;"><strong style="color:#06b6d4;">WDM (Wavelength Division Multiplexing)</strong></p>
+          <p style="font-size:12px;color:var(--muted);">Sending multiple colors of light through one fiber simultaneously. Each color = a separate data channel. Like having 80 radio stations on one antenna — but with light.</p>
+        </div>
+        <div style="padding:10px;background:#0a0a14;border-radius:10px;">
+          <p style="font-size:13px;"><strong style="color:#06b6d4;">CPO (Co-Packaged Optics)</strong></p>
+          <p style="font-size:12px;color:var(--muted);">Instead of plugging optical modules into a switch externally, you put the optics directly <em>on</em> the chip package. Less distance = less power = less heat. This is what Broadcom's Bailly platform does with Tomahawk switches.</p>
+        </div>
+        <div style="padding:10px;background:#0a0a14;border-radius:10px;">
+          <p style="font-size:13px;"><strong style="color:#06b6d4;">PAM4 DSP</strong></p>
+          <p style="font-size:12px;color:var(--muted);">A way to encode 2 bits per symbol instead of 1 (so double the data rate). The DSP (Digital Signal Processor) cleans up the signal after it gets noisy traveling through fiber. Marvell's Inphi acquisition was all about this — it's the "brain" that makes high-speed optical links actually work cleanly.</p>
+        </div>
+        <div style="padding:10px;background:#0a0a14;border-radius:10px;">
+          <p style="font-size:13px;"><strong style="color:#06b6d4;">ELS (External Light Source)</strong></p>
+          <p style="font-size:12px;color:var(--muted);">Silicon is great at guiding light but terrible at <em>generating</em> it. So you need a separate laser (usually made from indium phosphide) to create the light beam. Coherent and Lumentum dominate this — they're the "light suppliers" for the whole ecosystem.</p>
+        </div>
+        <div style="padding:10px;background:#0a0a14;border-radius:10px;">
+          <p style="font-size:13px;"><strong style="color:#06b6d4;">PDK (Process Design Kit)</strong></p>
+          <p style="font-size:12px;color:var(--muted);">A toolkit from the foundry that tells designers "here are the building blocks you can use." Like a Lego instruction manual — you don't need to know how plastic is made, just how to snap pieces together. This is what makes the fabless model possible.</p>
+        </div>
+      </div>
+    </details>
+
+    <div class="section-title">Market Momentum</div>
+    <div class="stats">
+      <div class="stat">
+        <div class="num">25.5% CAGR</div>
+        <div class="label">Silicon photonics market to 2032 → $10.5B revenue</div>
+      </div>
+      <div class="stat">
+        <div class="num">$278M → $2.7B</div>
+        <div class="label">YOLE forecast (2024 → 2030), 46% CAGR</div>
+      </div>
+      <div class="stat">
+        <div class="num">1.31µm / 1.55µm</div>
+        <div class="label">Telecom wavelengths aligned with silicon photonics</div>
+      </div>
+    </div>
+
+    <div class="section-title">Value Chain Map</div>
+    <div class="card" style="border-left:3px solid #06b6d4;border-radius:0 14px 14px 0;margin-bottom:16px;">
+      <p style="font-size:13px;color:#7dd3fc;font-weight:600;margin-bottom:4px;">🐱 How to read this map</p>
+      <p style="font-size:13px;color:var(--muted);">
+        Think of it like building a house. You need <strong style="color:#60a5fa;">architects & blueprints</strong> (EDA/Design), <strong style="color:#22c55e;">construction crews & land</strong> (foundries), <strong style="color:#60a5fa;">the electrical system</strong> (platform/chip companies that route the light), <strong style="color:#a78bfa;">the power company</strong> (light source suppliers — without them, nothing lights up), and <strong style="color:#2dd4bf;">the building inspectors</strong> (testing & packaging — they make sure it actually works). No single company does everything — that's why mapping the ecosystem matters for investing.
+      </p>
+    </div>
+    <div class="value-chain">
+      <div class="layer">
+        <div class="layer-label design">Design & Foundry - EDA / Design</div>
+        <div class="companies">
+          <div class="company design"><span class="logo">AN</span> Ansys/Lumerical (SNPS)</div>
+          <div class="company design"><span class="logo">CD</span> Cadence (CDNS)</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-label foundry">Design & Foundry - Foundries</div>
+        <div class="companies">
+          <div class="company foundry"><span class="logo">TS</span> TSMC (TSM) - COUPE tech</div>
+          <div class="company foundry"><span class="logo">GF</span> GlobalFoundries (GFS)</div>
+          <div class="company foundry"><span class="logo">TW</span> Tower Semi (TSEM)</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-label design">Platform & Chip Leaders (CPO + Interconnects)</div>
+        <div class="companies">
+          <div class="company design"><span class="logo">IN</span> Intel (INTC) - 800G/1.6T leader</div>
+          <div class="company design"><span class="logo">NV</span> Nvidia (NVDA)</div>
+          <div class="company design"><span class="logo">AV</span> Broadcom (AVGO) - Bailly + Tomahawk</div>
+          <div class="company design"><span class="logo">MR</span> Marvell (MRVL) - PAM4 + photonic fabric</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-label light">Light Sources & System Integration</div>
+        <div class="companies">
+          <div class="company light"><span class="logo">CO</span> Coherent (COHR) - ELS leader</div>
+          <div class="company light"><span class="logo">LU</span> Lumentum (LITE)</div>
+          <div class="company light"><span class="logo">NO</span> Nokia (NOK) - Infinera 2025</div>
+          <div class="company light"><span class="logo">CS</span> Cisco (CSCO) - Luxtera + Acacia</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-label test">Testing & Packaging</div>
+        <div class="companies">
+          <div class="company test"><span class="logo">FF</span> FormFactor (FORM) - Keystone Photonics</div>
+          <div class="company test"><span class="logo">GL</span> Corning (GLW) - chip-to-fiber packaging</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Investment Insights</div>
+    <div class="card" style="border-left:3px solid #fbbf24;border-radius:0 14px 14px 0;margin-bottom:16px;">
+      <p style="font-size:13px;color:#fbbf24;font-weight:600;margin-bottom:4px;">🐱 Robin's framing for you</p>
+      <p style="font-size:13px;color:var(--muted);">
+        This maps directly to what you've been learning about the AI value chain. Silicon photonics sits at L5-L6 — the networking/infrastructure layer. The same "picks and shovels" logic applies: don't just chase the chip designers, look at who controls the bottlenecks. In HBM, it was SK Hynix. In photonics, it's <strong>Coherent/Lumentum</strong> (they make the lasers everyone needs) and <strong>FormFactor</strong> (testing = the quality gatekeeper). And the CMOS reuse story is the clearest example of "capital efficiency as a moat" you'll find anywhere.
+      </p>
+    </div>
+    <div class="insights">
+      <div class="insight">
+        <h4>Follow the infrastructure transition</h4>
+        <p>Value accrues to firms that efficiently adapt existing CMOS infrastructure to photonics - not just chip makers.</p>
+      </div>
+      <div class="insight">
+        <h4>Laser light sources = bottleneck moats</h4>
+        <p>Coherent and Lumentum hold quasi-monopoly positions for external light sources (ELS).</p>
+      </div>
+      <div class="insight">
+        <h4>Picks & shovels stability</h4>
+        <p>Testing and packaging players like FormFactor offer steadier revenue regardless of platform winners.</p>
+      </div>
+      <div class="insight">
+        <h4>Disruptive small caps</h4>
+        <p>POET (optical interposer), Aeluma (lasers on silicon), Ayar Labs (chip-to-chip optical).</p>
+      </div>
+    </div>
+
+    <p class="source">Source: <a href="https://x.com/photoncap/status/2015457552381997258" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">@PhotonCap on X</a> — "PC101 Lecture 1: Why Silicon Photonics Now?" (Jan 25, 2026)</p>
+  </div>
+</body>
+</html>

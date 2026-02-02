@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strava — Unit Economics Breakdown</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --surface-2: #1f2330;
+    --border: rgba(255,255,255,0.06);
+    --text: #e8e6e1;
+    --text-muted: #8a8b91;
+    --accent: #fc4c02;
+    --accent-glow: rgba(252,76,2,0.15);
+    --green: #34d399;
+    --green-glow: rgba(52,211,153,0.12);
+    --gold: #f5c542;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .container {
+    max-width: 720px;
+    width: 100%;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease-out;
+  }
+
+  .header .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 6px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* Metrics Grid */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s ease-out both;
+  }
+
+  .metric-card:nth-child(1) { animation-delay: 0.1s; }
+  .metric-card:nth-child(2) { animation-delay: 0.15s; }
+  .metric-card:nth-child(3) { animation-delay: 0.2s; }
+  .metric-card:nth-child(4) { animation-delay: 0.25s; }
+
+  .metric-card .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .metric-card .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .metric-card .note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* LTV Hero Card */
+  .ltv-hero {
+    background: linear-gradient(135deg, var(--accent) 0%, #e03e00 100%);
+    border: none;
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s ease-out 0.3s both;
+  }
+
+  .ltv-hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .ltv-hero .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 8px;
+  }
+
+  .ltv-hero .value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .ltv-hero .subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 8px;
+  }
+
+  /* Ratio Badge */
+  .ratio-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .ratio-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    animation: fadeUp 0.6s ease-out 0.35s both;
+  }
+
+  .ratio-card.highlight {
+    background: var(--green-glow);
+    border-color: rgba(52,211,153,0.2);
+  }
+
+  .ratio-card .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .ratio-card .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .ratio-card.highlight .value {
+    color: var(--green);
+  }
+
+  .ratio-card .verdict {
+    font-size: 12px;
+    color: var(--green);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  /* LTV Calculation Breakdown */
+  .breakdown {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.6s ease-out 0.4s both;
+  }
+
+  .breakdown h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .breakdown .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .formula-box {
+    background: var(--surface-2);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.8;
+    border: 1px solid rgba(245,197,66,0.1);
+  }
+
+  .step-list {
+    list-style: none;
+  }
+
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .step-content .step-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+
+  .step-content .step-detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .step-content .step-calc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 4px;
+    display: inline-block;
+    background: var(--accent-glow);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* Year-by-Year Table */
+  .yearly-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    animation: fadeUp 0.6s ease-out 0.45s both;
+  }
+
+  .yearly-table h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .yearly-table .desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  thead th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 0 12px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th:not(:first-child) {
+    text-align: right;
+  }
+
+  tbody td {
+    padding: 14px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody td:not(:first-child) {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr.total-row td {
+    border-top: 2px solid rgba(252,76,2,0.3);
+    font-weight: 700;
+    color: var(--accent);
+    padding-top: 16px;
+  }
+
+  .bar-cell {
+    position: relative;
+  }
+
+  .bar-bg {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 6px;
+    border-radius: 3px;
+    background: var(--accent);
+    opacity: 0.25;
+    transition: width 0.8s ease-out;
+  }
+
+  .tag-positive {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .tag-negative {
+    color: #f87171;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 36px;
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.5;
+    animation: fadeUp 0.6s ease-out 0.5s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .metrics-grid { grid-template-columns: 1fr; }
+    .ratio-row { grid-template-columns: 1fr; }
+    .ltv-hero .value { font-size: 40px; }
+    body { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="tag">HBS Case 814-055</div>
+    <h1>Strava — Unit Economics</h1>
+    <p>Series A Subscriber Economics (October 2010)</p>
+  </div>
+
+  <!-- Input Metrics -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="label">Revenue / Subscriber / Year</div>
+      <div class="value">$40</div>
+      <div class="note">Blended avg of $6/mo + $59/yr plans</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Acquisition Cost (CAC)</div>
+      <div class="value">$15</div>
+      <div class="note">One-time cost to acquire a subscriber</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Service Delivery Cost / Year</div>
+      <div class="value">$2</div>
+      <div class="note">Hosting, infrastructure, support per user</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Annual Renewal Rate</div>
+      <div class="value">80%</div>
+      <div class="note">20% churn — 4 out of 5 renew each year</div>
+    </div>
+  </div>
+
+  <!-- LTV Hero -->
+  <div class="ltv-hero">
+    <div class="label">Customer Lifetime Value (LTV)</div>
+    <div class="value">$175</div>
+    <div class="subtitle">Expected total profit per subscriber over their lifetime</div>
+  </div>
+
+  <!-- Ratio -->
+  <div class="ratio-row">
+    <div class="ratio-card">
+      <div class="label">LTV : CAC Ratio</div>
+      <div class="value">11.7x</div>
+    </div>
+    <div class="ratio-card highlight">
+      <div class="label">Benchmark</div>
+      <div class="value">≥ 3x</div>
+      <div class="verdict">✓ Strava passes with flying colors</div>
+    </div>
+  </div>
+
+  <!-- Calculation Breakdown -->
+  <div class="breakdown">
+    <h2>How LTV is Calculated</h2>
+    <div class="desc">The lifetime value uses a perpetuity formula for recurring subscription revenue with churn.</div>
+
+    <div class="formula-box">
+      LTV = (Revenue − Delivery Cost) ÷ (1 − Renewal Rate) − CAC<br>
+      LTV = ($40 − $2) ÷ (1 − 0.80) − $15<br>
+      LTV = $38 ÷ 0.20 − $15 = $190 − $15 = <strong>$175</strong>
+    </div>
+
+    <ul class="step-list">
+      <li>
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Net revenue per year</div>
+          <div class="step-detail">Revenue minus the cost to actually serve the customer each year.</div>
+          <div class="step-calc">$40 − $2 = $38/year</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Expected lifetime revenue (perpetuity)</div>
+          <div class="step-detail">With 80% renewal, the average customer stays ~5 years. Divide net revenue by churn rate (1 − renewal rate) to get lifetime gross value.</div>
+          <div class="step-calc">$38 ÷ 0.20 = $190</div>
+        </div>
+      </li>
+      <li>
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Subtract acquisition cost</div>
+          <div class="step-detail">The one-time cost to get this customer in the door.</div>
+          <div class="step-calc">$190 − $15 = $175</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Year by Year -->
+  <div class="yearly-table">
+    <h2>Year-by-Year Subscriber Cohort</h2>
+    <div class="desc">What happens to 1,000 subscribers acquired in Year 0, assuming 80% renewal.</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Subscribers</th>
+          <th>Revenue</th>
+          <th>Delivery Cost</th>
+          <th>Net Profit</th>
+          <th>Cumulative</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>0 (Acq.)</td>
+          <td>1,000</td>
+          <td>—</td>
+          <td>—</td>
+          <td class="tag-negative">−$15,000</td>
+          <td>−$15,000</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>1,000</td>
+          <td>$40,000</td>
+          <td>$2,000</td>
+          <td class="tag-positive">+$38,000</td>
+          <td>$23,000</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>800</td>
+          <td>$32,000</td>
+          <td>$1,600</td>
+          <td class="tag-positive">+$30,400</td>
+          <td>$53,400</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>640</td>
+          <td>$25,600</td>
+          <td>$1,280</td>
+          <td class="tag-positive">+$24,320</td>
+          <td>$77,720</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>512</td>
+          <td>$20,480</td>
+          <td>$1,024</td>
+          <td class="tag-positive">+$19,456</td>
+          <td>$97,176</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>410</td>
+          <td>$16,400</td>
+          <td>$820</td>
+          <td class="tag-positive">+$15,580</td>
+          <td>$112,756</td>
+        </tr>
+        <tr>
+          <td>…</td>
+          <td colspan="4" style="color: var(--text-muted); font-style: italic; text-align: center;">continues declining with 20% churn each year</td>
+          <td></td>
+        </tr>
+        <tr class="total-row">
+          <td>∞</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>$175,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    HBS Case 9-814-055 · Strava · FM476 · LSE 2026
+  </div>
+
+</div>
+
+</body>
+</html>
