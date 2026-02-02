@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Math Needed for Trading on Polymarket — Study Hub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-alt: #1a1a2e;
+    --surface-hover: #1e1e2a;
+    --border: #1e1e2e;
+    --border-alt: #2a2a4a;
+    --text: #e8e8ed;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --accent: #5ec4b6;
+    --accent-glow: rgba(94, 196, 182, 0.12);
+    --green: #34d399;
+    --green-glow: rgba(52, 211, 153, 0.12);
+    --orange: #f59e0b;
+    --orange-glow: rgba(245, 158, 11, 0.12);
+    --highlight: #fbbf24;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --accent: #1a8a7d;
+    --accent-glow: rgba(26, 138, 125, 0.06);
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.08);
+    --orange: #d97706;
+    --orange-glow: rgba(217, 119, 6, 0.08);
+    --highlight: #b45309;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container { max-width: 820px; margin: 0; }
+
+  .page-layout {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .content { flex: 1; min-width: 0; }
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface-hover);
+  }
+  .section-nav a.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-glow) inset;
+  }
+  .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1120px; margin: 0 auto; padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none; border: 1.5px solid var(--border-alt); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero { text-align: center; margin: 2rem 0 2.5rem; animation: fadeUp 0.6s ease-out; }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-glow); padding: 6px 14px;
+    border-radius: 6px; margin-bottom: 16px; font-weight: 700;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .hero .subtitle { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
+  .hero .source { font-size: 12px; color: var(--text-dim); margin-top: 8px; }
+  .hero .source a { color: var(--accent); text-decoration: none; }
+  .hero .source a:hover { text-decoration: underline; }
+
+  .section { margin-bottom: 2.75rem; animation: fadeUp 0.6s ease-out; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: var(--accent);
+    margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .section h3 { font-size: 15px; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+  .section p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 1rem;
+  }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+  .card p { margin-bottom: 0.4rem; }
+
+  .highlight-box {
+    background: var(--accent-glow); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .highlight-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .highlight-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  .takeaway-box {
+    background: var(--surface-alt);
+    border: 1px solid var(--border-alt);
+    border-left: 4px solid var(--accent);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    margin: 1.25rem 0 0;
+  }
+  .takeaway-box .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .takeaway-box p { color: var(--text); font-size: 14px; line-height: 1.7; }
+
+  .math-callout {
+    background: linear-gradient(135deg, rgba(26, 138, 125, 0.08), rgba(26, 138, 125, 0.02));
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1.1rem 0;
+  }
+  .math-callout .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .math-callout code {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    color: var(--text);
+    display: block;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .stat-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.25rem 0 1.75rem;
+  }
+  @media (max-width: 820px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .stat-row { grid-template-columns: 1fr; } }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1rem; text-align: center;
+  }
+  .stat-card .stat-number { font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 4px; }
+  .stat-card .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0;
+  }
+  th, td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 700; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  td { color: var(--text-secondary); }
+  tr:hover td { background: var(--surface-hover); }
+
+  .footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; color: var(--text-dim);
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .top-bar { max-width: 100%; padding-bottom: 12px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links { flex-direction: row; gap: 8px; }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .section-nav a.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .section { animation: none; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+</div>
+
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+    <div class="container">
+      <div class="hero">
+        <span class="tag">Investing &amp; Markets — Deep Dive</span>
+        <h1>📈 The Math Needed for Trading on Polymarket</h1>
+        <p class="subtitle">How sophisticated traders extracted nearly $40M in guaranteed arbitrage profits by solving the marginal polytope, projecting with Bregman divergence, and executing with Frank-Wolfe optimization.</p>
+        <p class="source">Based on <a href="https://x.com/RohOnChain/status/2017314080395296995" target="_blank" rel="noopener">@RohOnChain's thread</a></p>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-number">$40M</div>
+          <div class="stat-label">Total extracted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">17,218</div>
+          <div class="stat-label">Conditions analyzed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">41%</div>
+          <div class="stat-label">Markets mispriced</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">$496</div>
+          <div class="stat-label">Avg profit / trade</div>
+        </div>
+      </div>
+
+      <!-- ==================== PART I ==================== -->
+      <div class="section">
+        <h2 id="part-i-the-marginal-polytope-problem">Part I — The Marginal Polytope Problem (Why Simple Math Fails)</h2>
+        <p>Polymarket odds look like independent probabilities, but many markets have hidden logical constraints. Once you allow multiple conditions, the odds must all live inside a feasible geometric region — the marginal polytope.</p>
+
+        <div class="card">
+          <div class="card-title">Where the Arbitrage Comes From</div>
+          <p>• Single vs multi-condition markets create logical dependencies.</p>
+          <p>• Arbitrage-free prices must lie inside the marginal polytope: <strong>M = conv(Z)</strong>.</p>
+          <p>• Brute-force checking is impossible: an NCAA tournament implies <strong>2^63</strong> outcomes.</p>
+        </div>
+
+        <div class="math-callout">
+          <div class="label">Marginal Polytope</div>
+          <code>M = conv(Z)
+Z = set of all logically consistent outcomes</code>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Integer Programming Fix</div>
+          <p>• Replace exponential enumeration with linear constraints.</p>
+          <p>• Integer programming (IP) enforces logical validity without listing every outcome.</p>
+        </div>
+
+        <div class="highlight-box">
+          <div class="label">Real-World Evidence</div>
+          <p>Researchers examined <strong>17,218</strong> conditions. <strong>7,051</strong> showed single-market arbitrage (41%), with a median mispricing of <strong>$0.60 per dollar</strong>.</p>
+        </div>
+
+        <div class="takeaway-box">
+          <div class="label">Key Takeaway</div>
+          <p>In combinatorial markets, “probabilities” are only valid if they live inside a polytope. The gap between naive odds and feasible odds is the core arbitrage opportunity.</p>
+        </div>
+      </div>
+
+      <!-- ==================== PART II ==================== -->
+      <div class="section">
+        <h2 id="part-ii-bregman-projection">Part II — Bregman Projection (How to Remove Arbitrage)</h2>
+        <p>Once prices are outside the marginal polytope, the question becomes how to project them back in a way that respects market maker economics.</p>
+
+        <div class="card">
+          <div class="card-title">Why Euclidean Distance Fails</div>
+          <p>• Market prices are generated by LMSR-style cost functions.</p>
+          <p>• The natural geometry is <strong>Bregman divergence</strong>, not Euclidean distance.</p>
+        </div>
+
+        <div class="math-callout">
+          <div class="label">Arbitrage Profit Identity</div>
+          <code>Profit = D(μ* || θ)
+μ* = Bregman projection of θ onto M</code>
+        </div>
+
+        <div class="highlight-box">
+          <div class="label">Top Arbitrageur Performance</div>
+          <p>One trader captured <strong>$2,009,632</strong> across <strong>4,049 trades</strong>, averaging about <strong>$496 per trade</strong>.</p>
+        </div>
+
+        <div class="takeaway-box">
+          <div class="label">Key Takeaway</div>
+          <p>Arbitrage is literally the Bregman distance between market prices and the closest feasible point. The larger the divergence, the larger the guaranteed profit.</p>
+        </div>
+      </div>
+
+      <!-- ==================== PART III ==================== -->
+      <div class="section">
+        <h2 id="part-iii-frank-wolfe-algorithm">Part III — Frank-Wolfe Algorithm (Making It Tractable)</h2>
+        <p>The marginal polytope is too large to enumerate, so the solution is to discover its vertices iteratively.</p>
+
+        <div class="card">
+          <div class="card-title">Frank-Wolfe Mechanics</div>
+          <p>• Iteratively discover vertices instead of enumerating all outcomes.</p>
+          <p>• Each iteration uses an IP oracle via the Gurobi solver (1–30 seconds).</p>
+          <p>• Barrier Frank-Wolfe stabilizes gradients near boundary regions.</p>
+        </div>
+
+        <div class="math-callout">
+          <div class="label">Convergence</div>
+          <code>50–150 iterations
+sufficient for thousands of conditions</code>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Empirical Result</div>
+          <p>• FWMM outperformed LCMM by <strong>38%</strong> once enough outcomes had settled.</p>
+        </div>
+
+        <div class="takeaway-box">
+          <div class="label">Key Takeaway</div>
+          <p>Frank-Wolfe makes the impossible feasible: you only ever solve the important corners of the polytope, not the full exponential space.</p>
+        </div>
+      </div>
+
+      <!-- ==================== PART IV ==================== -->
+      <div class="section">
+        <h2 id="part-iv-execution-under-non-atomic-constraints">Part IV — Execution Under Non-Atomic Constraints</h2>
+        <p>Even if the math says “guaranteed arbitrage,” execution risk turns it into a race. On Polymarket’s CLOB, trades fill sequentially, not atomically.</p>
+
+        <div class="card">
+          <div class="card-title">Execution Reality</div>
+          <p>• Sequential fills introduce slippage versus theoretical atomic bundles.</p>
+          <p>• VWAP is evaluated per Polygon block (~2 seconds).</p>
+          <p>• Speed hierarchy: retail ~2,650ms vs sophisticated ~2,040ms.</p>
+        </div>
+
+        <div class="highlight-box">
+          <div class="label">Why Copytrading Fails</div>
+          <p>Fast wallets often become exit liquidity. Copying their trades captures the residual spread, not the arbitrage.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Capital + Gas Reality</div>
+          <p>• Capital efficiency needs <strong>$500K+</strong>; gas costs eat small positions.</p>
+          <p>• Real execution success: <strong>87%</strong> for single-condition, <strong>45%</strong> for combinatorial.</p>
+        </div>
+
+        <div class="takeaway-box">
+          <div class="label">Key Takeaway</div>
+          <p>Math creates the opportunity, but execution speed and capital depth decide who can capture it.</p>
+        </div>
+      </div>
+
+      <!-- ==================== PART V ==================== -->
+      <div class="section">
+        <h2 id="part-v-the-complete-system">Part V — The Complete System</h2>
+        <p>Polymarket arbitrage at scale is a full-stack pipeline: data ingestion, dependency detection, optimization, and execution validation.</p>
+
+        <div class="card">
+          <div class="card-title">System Stack</div>
+          <p>• Data pipeline: WebSocket + Alchemy Polygon node, <strong>86M</strong> transactions analyzed.</p>
+          <p>• Dependency detection: DeepSeek-R1 at <strong>81.45%</strong> accuracy on complex markets.</p>
+          <p>• Three-layer optimization: LCMM → IP projection → execution validation.</p>
+          <p>• Position sizing with a modified Kelly criterion.</p>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Profit Source (Apr 2024 – Apr 2025)</th>
+              <th>Extracted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total extracted</td>
+              <td>$39,688,585</td>
+            </tr>
+            <tr>
+              <td>Single condition</td>
+              <td>$10,581,362</td>
+            </tr>
+            <tr>
+              <td>Market rebalancing</td>
+              <td>$29,011,589</td>
+            </tr>
+            <tr>
+              <td>Combinatorial</td>
+              <td>$95,634</td>
+            </tr>
+            <tr>
+              <td>Top 10 traders</td>
+              <td>$8.1M (20.5%)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card">
+          <div class="card-title">Resources Mentioned</div>
+          <p>• Paper: “Unravelling the Probabilistic Forest” (arXiv:2508.03474v1)</p>
+          <p>• Theory: “Arbitrage-Free Combinatorial Market Making via IP” (arXiv:1606.02825v2)</p>
+          <p>• Solver: Gurobi Optimizer</p>
+          <p>• LLM: DeepSeek-R1-Distill-Qwen-32B</p>
+        </div>
+
+        <div class="takeaway-box">
+          <div class="label">Key Takeaway</div>
+          <p>This isn’t a single trick — it’s an integrated system that marries combinatorial optimization, market microstructure, and execution engineering.</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        Source thread: <a href="https://x.com/RohOnChain/status/2017314080395296995" target="_blank" rel="noopener">@RohOnChain on X</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+
+function slugifyHeading(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function initSectionNav() {
+  const navLinks = document.getElementById('section-nav-links');
+  if (!navLinks) return;
+
+  const headings = Array.from(document.querySelectorAll('.section h2'));
+  if (!headings.length) return;
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      heading.id = slugifyHeading(heading.textContent || '');
+    }
+  });
+
+  navLinks.innerHTML = '';
+  headings.forEach((heading) => {
+    const link = document.createElement('a');
+    link.className = 'section-link';
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent || '';
+    navLinks.appendChild(link);
+  });
+
+  const linkMap = new Map();
+  navLinks.querySelectorAll('a').forEach((link) => {
+    const targetId = link.getAttribute('href').slice(1);
+    linkMap.set(targetId, link);
+    link.addEventListener('click', () => setActive(targetId));
+  });
+
+  function setActive(id) {
+    linkMap.forEach((link) => {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    });
+    const activeLink = linkMap.get(id);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      activeLink.setAttribute('aria-current', 'true');
+    }
+  }
+
+  setActive(headings[0].id);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+}
+
+(function() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('theme-icon').textContent = saved === 'dark' ? '☀️' : '🌙';
+    initSectionNav();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Project Status
+
+## Done
+- Created PRD and TODO for Polymarket arbitrage study page.
+- Built `investing/polymarket-arbitrage.html` with five-part structure, stats row, callouts, and section nav.
+- Added Polymarket page entry to `index.html`.
+
+## Next
+- Perform visual self-review of the new page (desktop + mobile) and update TODO.
+
+## Blockers
+- None.
