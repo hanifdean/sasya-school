@@ -52,6 +52,8 @@
     --highlight: #b45309;
   }
 
+  html { scroll-behavior: smooth; }
+
   body {
     font-family: 'Inter', -apple-system, sans-serif;
     background: var(--bg);
@@ -61,11 +63,69 @@
     transition: background 0.3s ease, color 0.3s ease;
   }
 
-  .container { max-width: 800px; margin: 0 auto; }
+  .container { max-width: 800px; margin: 0; }
+
+  .page-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .content { flex: 1; min-width: 0; }
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface-hover);
+  }
+  .section-nav a.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-glow) inset;
+  }
+  .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .top-bar {
     display: flex; align-items: center; justify-content: space-between;
-    max-width: 800px; margin: 0 auto; padding: 0 0 16px 0;
+    max-width: 1100px; margin: 0 auto; padding: 0 0 16px 0;
   }
   .back-link {
     font-size: 13px; color: var(--text-muted); text-decoration: none;
@@ -166,6 +226,44 @@
     text-align: center; font-size: 12px; color: var(--text-dim);
   }
 
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .top-bar { max-width: 100%; padding-bottom: 12px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links {
+      flex-direction: row;
+      gap: 8px;
+    }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .section-nav a.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .section { animation: none; }
+  }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
@@ -181,17 +279,23 @@
   </button>
 </div>
 
-<div class="container">
-  <div class="hero">
-    <span class="tag">Entrepreneurial Finance — Deep Dive</span>
-    <h1>🔒 The Broken Promise</h1>
-    <p class="subtitle">Companies staying private too long is breaking the social contract that built the American middle class.</p>
-    <p class="source">Based on <a href="https://x.com/citrini7/status/2013734569397068268" target="_blank" rel="noopener">@citrini7's thread</a></p>
-  </div>
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+    <div class="container">
+      <div class="hero">
+        <span class="tag">Entrepreneurial Finance — Deep Dive</span>
+        <h1>🔒 The Broken Promise</h1>
+        <p class="subtitle">Companies staying private too long is breaking the social contract that built the American middle class.</p>
+        <p class="source">Based on <a href="https://x.com/citrini7/status/2013734569397068268" target="_blank" rel="noopener">@citrini7's thread</a></p>
+      </div>
 
   <!-- ==================== HOW IT USED TO WORK ==================== -->
   <div class="section">
-    <h2>📜 How It Used to Work</h2>
+    <h2 id="how-it-used-to-work">📜 How It Used to Work</h2>
     <p>Public markets were once the great equalizer. Regular people — teachers, firefighters, small business owners — could participate in wealth creation by buying shares in companies they believed in, early in those companies' growth stories.</p>
 
     <div class="card">
@@ -209,7 +313,7 @@
 
   <!-- ==================== THE NUMBERS ==================== -->
   <div class="section">
-    <h2>📉 The Numbers</h2>
+    <h2 id="the-numbers">📉 The Numbers</h2>
     <p>The public market ecosystem is shrinking — not because fewer companies are being built, but because the most valuable ones refuse to go public.</p>
 
     <div class="stat-row">
@@ -237,7 +341,7 @@
 
   <!-- ==================== WHAT'S CHANGED ==================== -->
   <div class="section">
-    <h2>🔄 What's Changed</h2>
+    <h2 id="whats-changed">🔄 What's Changed</h2>
     <p>The most transformative companies of our generation are growing entirely while private — and their users, who create much of the value, can't own a single share.</p>
 
     <div class="danger-box">
@@ -252,7 +356,7 @@
 
   <!-- ==================== NEO-FEUDALISM ==================== -->
   <div class="section">
-    <h2>🏰 The Neo-Feudalism Argument</h2>
+    <h2 id="the-neo-feudalism-argument">🏰 The Neo-Feudalism Argument</h2>
     <p>Citrini's core thesis is stark: the current system is creating a new class divide — not between workers and owners, but between <strong>accredited and non-accredited investors</strong>.</p>
 
     <div class="vs-grid">
@@ -283,7 +387,7 @@
 
   <!-- ==================== THE IRONY ==================== -->
   <div class="section">
-    <h2>🇨🇳 The Irony</h2>
+    <h2 id="the-irony">🇨🇳 The Irony</h2>
     <div class="highlight-box">
       <div class="label">💡 An Uncomfortable Comparison</div>
       <p>China's <strong>STAR Market</strong> (Shanghai's Nasdaq equivalent) is IPO-ing more early and mid-stage AI companies than the US. The country that America accuses of lacking market freedom is doing a better job of letting ordinary citizens invest in frontier technology companies.</p>
@@ -292,7 +396,7 @@
 
   <!-- ==================== WHY IT WON'T CHANGE ==================== -->
   <div class="section">
-    <h2>🔒 Why It Won't Change</h2>
+    <h2 id="why-it-wont-change">🔒 Why It Won't Change</h2>
     <p>The incentives for all private market participants are aligned against going public early. This isn't a bug — it's a feature of the current system.</p>
 
     <div class="card">
@@ -313,7 +417,7 @@
 
   <!-- ==================== CONNECTION TO COUPA ==================== -->
   <div class="section">
-    <h2>🔗 Connection to Coupa Case Study</h2>
+    <h2 id="connection-to-coupa-case-study">🔗 Connection to Coupa Case Study</h2>
     <p>In the <a href="coupa-case-study.html" style="color: var(--accent);">Coupa case study</a>, we examined the classic <strong>VC → growth equity → IPO</strong> path. Coupa IPO'd in 2016 at a <strong>$1.9 billion valuation</strong> — a textbook example of the venture-to-public pipeline working as intended.</p>
 
     <div class="highlight-box">
@@ -326,6 +430,8 @@
   <div class="footer">
     Entrepreneurial Finance — Study Hub · Built with 🐱 by Robin
   </div>
+    </div>
+  </main>
 </div>
 
 <script>
@@ -336,11 +442,79 @@ function toggleTheme() {
   document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
   localStorage.setItem('theme', next);
 }
+
+function slugifyHeading(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function initSectionNav() {
+  const navLinks = document.getElementById('section-nav-links');
+  if (!navLinks) return;
+
+  const headings = Array.from(document.querySelectorAll('.section h2'));
+  if (!headings.length) return;
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      heading.id = slugifyHeading(heading.textContent || '');
+    }
+  });
+
+  navLinks.innerHTML = '';
+  headings.forEach((heading) => {
+    const link = document.createElement('a');
+    link.className = 'section-link';
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent || '';
+    navLinks.appendChild(link);
+  });
+
+  const linkMap = new Map();
+  navLinks.querySelectorAll('a').forEach((link) => {
+    const targetId = link.getAttribute('href').slice(1);
+    linkMap.set(targetId, link);
+    link.addEventListener('click', () => setActive(targetId));
+  });
+
+  function setActive(id) {
+    linkMap.forEach((link) => {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    });
+    const activeLink = linkMap.get(id);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      activeLink.setAttribute('aria-current', 'true');
+    }
+  }
+
+  setActive(headings[0].id);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+}
+
 (function() {
   const saved = localStorage.getItem('theme') || 'light';
   document.documentElement.setAttribute('data-theme', saved);
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('theme-icon').textContent = saved === 'dark' ? '☀️' : '🌙';
+    initSectionNav();
   });
 })();
 </script>
