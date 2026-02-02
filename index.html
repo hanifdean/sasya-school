@@ -1,29 +1,351 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sasya's Study Materials</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 60px auto; padding: 20px; background: #fafafa; color: #333; }
-    h1 { font-size: 1.5rem; }
-    a { color: #2563eb; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .card { background: #fff; border-radius: 12px; padding: 20px; margin: 16px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    .tag { display: inline-block; background: #e0e7ff; color: #3730a3; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; margin-right: 6px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Hub — Hanif & Sasya</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0f0f14;
+    --surface: #1a1a24;
+    --surface-hover: #1e1e2a;
+    --border: #2a2a35;
+    --text: #e8e4de;
+    --text-muted: #8a8578;
+    --accent: #f5c563;
+    --accent-glow: rgba(245, 197, 99, 0.15);
+    --tag-bg: #2a2a35;
+    --tag-text: #f5c563;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    --divider: #22222e;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --text: #2c2a26;
+    --text-muted: #7a7570;
+    --accent: #c4890e;
+    --accent-glow: rgba(196, 137, 14, 0.08);
+    --tag-bg: #f0ebe3;
+    --tag-text: #946a0a;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --divider: #e5e0d8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  .header-left h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+  .header-left p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .tab {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    text-align: center;
+  }
+  .tab.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .tab:hover:not(.active) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Section */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-intro {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  /* Course group */
+  .course-group {
+    margin-bottom: 1.75rem;
+  }
+  .course-group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+    box-shadow: var(--card-shadow);
+    transform: translateY(-1px);
+  }
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card-title .icon { font-size: 1rem; }
+  .card-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 0.6rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    padding: 0.15rem 0.55rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .empty .emoji { font-size: 2rem; margin-bottom: 0.75rem; }
+
+  /* Footer */
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 1.5rem 1rem 3rem; }
+    .header-left h1 { font-size: 1.25rem; }
+    .tab { font-size: 0.8rem; padding: 0.6rem 0.75rem; }
+  }
+</style>
 </head>
 <body>
-  <h1>📚 Sasya's Study Materials</h1>
-  <p>Interactive study guides curated by Robin 🐱</p>
 
-  <div class="card">
-    <h3>🗺️ Simon Mind Maps — Public Management W3</h3>
-    <p>Two interactive mind maps of Herbert Simon's "Understanding the Natural and the Artificial Worlds"</p>
-    <span class="tag">Public Management</span>
-    <span class="tag">Week 3</span>
-    <br><br>
-    <a href="simon-mindmaps.html">Open Mind Maps →</a>
+<div class="container">
+  <div class="header">
+    <div class="header-left">
+      <h1>📚 Study Hub</h1>
+      <p>Hanif & Sasya's learning materials — curated by Robin 🐱</p>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+      <span id="theme-icon">☀️</span>
+    </button>
   </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showSection('sasya')">✨ Sasya's Materials</button>
+    <button class="tab" onclick="showSection('hanif')">💼 Hanif's Materials</button>
+  </div>
+
+  <!-- Sasya's Section -->
+  <div class="section active" id="section-sasya">
+    <p class="section-intro">Study guides, mind maps, and course materials for Sasya's MSc at LSE.</p>
+
+    <div class="course-group">
+      <div class="course-group-title">🏛️ Public Management</div>
+      <a class="card" href="public-management/simon-mindmaps.html">
+        <div class="card-title">
+          <span class="icon">🗺️</span> Simon — Mind Maps
+        </div>
+        <div class="card-desc">Two interactive mind maps of Herbert Simon's "Understanding the Natural and the Artificial Worlds" — Academic Disciplines & Representing Machines.</div>
+        <div class="tags">
+          <span class="tag">Week 3</span>
+          <span class="tag">Mind Map</span>
+          <span class="tag">Simon</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="course-group">
+      <div class="course-group-title">💰 Entrepreneurial Finance (FM-476)</div>
+      <div class="empty">
+        <div class="emoji">📝</div>
+        Materials coming soon
+      </div>
+    </div>
+
+    <div class="course-group">
+      <div class="course-group-title">🌱 Social Innovation & Design (MG4G2)</div>
+      <div class="empty">
+        <div class="emoji">📝</div>
+        Materials coming soon
+      </div>
+    </div>
+
+    <div class="course-group">
+      <div class="course-group-title">📖 Dissertation (MG4J5)</div>
+      <div class="empty">
+        <div class="emoji">📝</div>
+        Materials coming soon
+      </div>
+    </div>
+  </div>
+
+  <!-- Hanif's Section -->
+  <div class="section" id="section-hanif">
+    <p class="section-intro">Learning materials, frameworks, and reference guides for Hanif's projects and MBA prep.</p>
+
+    <div class="course-group">
+      <div class="course-group-title">🎓 Cambridge MBA Prep</div>
+      <div class="empty">
+        <div class="emoji">📝</div>
+        Materials coming soon
+      </div>
+    </div>
+
+    <div class="course-group">
+      <div class="course-group-title">🤖 AI & Technology</div>
+      <div class="empty">
+        <div class="emoji">📝</div>
+        Materials coming soon
+      </div>
+    </div>
+
+    <div class="course-group">
+      <div class="course-group-title">💰 Investing & Markets</div>
+      <div class="empty">
+        <div class="emoji">📝</div>
+        Materials coming soon
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Built with 🐱 by Robin — updated as new materials are added
+  </div>
+</div>
+
+<script>
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+
+// Restore saved theme
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('theme-icon').textContent = saved === 'dark' ? '☀️' : '🌙';
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
