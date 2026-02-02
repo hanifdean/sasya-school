@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simon — Mind Maps</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f0f14;
+    color: #e8e4de;
+    min-height: 100vh;
+  }
+
+  .header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f5c563;
+    margin-bottom: 0.25rem;
+  }
+  .header p {
+    font-size: 0.85rem;
+    color: #8a8578;
+    font-style: italic;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem 0.5rem;
+    position: sticky;
+    top: 0;
+    background: #0f0f14;
+    z-index: 10;
+  }
+  .tab {
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    border: 1.5px solid #2a2a35;
+    background: transparent;
+    color: #8a8578;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+  }
+  .tab.active {
+    background: #f5c563;
+    color: #0f0f14;
+    border-color: #f5c563;
+  }
+  .tab:hover:not(.active) {
+    border-color: #f5c563;
+    color: #f5c563;
+  }
+
+  .map-container {
+    display: none;
+    padding: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .map-container.active { display: block; }
+
+  /* Mind map tree styles */
+  .mind-map {
+    position: relative;
+    padding: 1rem 0;
+  }
+
+  .root-node {
+    background: linear-gradient(135deg, #f5c563 0%, #e8a830 100%);
+    color: #0f0f14;
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: center;
+    max-width: 420px;
+    margin: 0 auto 2rem;
+    box-shadow: 0 4px 24px rgba(245, 197, 99, 0.25);
+    line-height: 1.4;
+  }
+
+  .branches {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-left: 1rem;
+  }
+
+  .branch {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid #2a2a35;
+  }
+  .branch::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.1rem;
+    width: 1.25rem;
+    height: 2px;
+    background: #2a2a35;
+  }
+
+  .branch-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    background: #1a1a24;
+    border-radius: 12px;
+    border: 1.5px solid #2a2a35;
+    transition: all 0.2s ease;
+  }
+  .branch-header:hover {
+    border-color: #f5c563;
+    background: #1e1e2a;
+  }
+  .branch-header.expanded {
+    border-color: #f5c56380;
+    background: #1e1e2a;
+  }
+
+  .branch-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .branch-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #f5c563;
+    line-height: 1.4;
+  }
+
+  .branch-toggle {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: #5a5a6a;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+  .branch-header.expanded .branch-toggle {
+    transform: rotate(90deg);
+    color: #f5c563;
+  }
+
+  .sub-branches {
+    display: none;
+    padding: 0.75rem 0 0 1.5rem;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .sub-branches.open {
+    display: flex;
+  }
+
+  .leaf {
+    position: relative;
+    padding: 0.6rem 0.9rem;
+    padding-left: 1.5rem;
+    background: #15151e;
+    border-radius: 10px;
+    border: 1px solid #22222e;
+    font-size: 0.82rem;
+    color: #c4bfb5;
+    line-height: 1.5;
+  }
+  .leaf::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: 0.95rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3a3a4a;
+  }
+
+  .leaf strong {
+    color: #e8e4de;
+    font-weight: 600;
+  }
+  .leaf em {
+    color: #f5c56399;
+    font-style: italic;
+  }
+
+  /* sub-sub level */
+  .sub-leaf {
+    padding: 0.4rem 0.7rem 0.4rem 1.5rem;
+    font-size: 0.78rem;
+    color: #9a9590;
+    position: relative;
+    line-height: 1.45;
+  }
+  .sub-leaf::before {
+    content: '–';
+    position: absolute;
+    left: 0.5rem;
+    color: #4a4a55;
+  }
+
+  .connector-line {
+    width: 2px;
+    height: 2rem;
+    background: linear-gradient(to bottom, #f5c56350, #2a2a35);
+    margin: 0 auto;
+  }
+
+  .note-box {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: #1a1a24;
+    border-radius: 12px;
+    border: 1px dashed #2a2a35;
+    font-size: 0.8rem;
+    color: #8a8578;
+    line-height: 1.5;
+  }
+  .note-box strong {
+    color: #f5c563;
+  }
+
+  @media (max-width: 600px) {
+    .root-node { font-size: 0.9rem; padding: 0.8rem 1rem; }
+    .branch-label { font-size: 0.82rem; }
+    .branches { padding-left: 0.5rem; }
+    .branch { padding-left: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Herbert Simon — The Sciences of the Artificial</h1>
+  <p>"Understanding the Natural and the Artificial Worlds"</p>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showMap(0)">🌐 Academic Disciplines</button>
+  <button class="tab" onclick="showMap(1)">⚙️ Representing Machines</button>
+</div>
+
+<!-- ===== MAP 1: Academic Disciplines ===== -->
+<div class="map-container active" id="map0">
+  <div class="mind-map">
+    <div class="root-node">
+      Academic Disciplines About<br>Artificial Phenomena
+    </div>
+    <div class="connector-line"></div>
+    <div class="branches">
+
+      <!-- Branch 1 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🔑</span>
+          <span class="branch-label">Core Argument: Need for a "Science of the Artificial"</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf">Natural sciences study <strong>what is</strong> — phenomena that exist independently of human design</div>
+          <div class="leaf">Many disciplines actually study <strong>what is designed</strong> — man-made artifacts, systems, and institutions</div>
+          <div class="leaf">These disciplines are inherently <strong>normative</strong> (concerned with <em>how things ought to be</em>) rather than purely descriptive</div>
+          <div class="leaf">Simon argues we need distinct <strong>"sciences of the artificial"</strong> — not just natural science methods applied to artificial things</div>
+        </div>
+      </div>
+
+      <!-- Branch 2 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🏛️</span>
+          <span class="branch-label">The Professional Schools as Sciences of the Artificial</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf"><strong>Engineering</strong> — designs machines, structures, processes</div>
+          <div class="leaf"><strong>Medicine</strong> — designs interventions & therapies for health</div>
+          <div class="leaf"><strong>Business & Management</strong> — designs organizations, strategies, markets</div>
+          <div class="leaf"><strong>Architecture</strong> — designs buildings & spaces for human use</div>
+          <div class="leaf"><strong>Education</strong> — designs curricula, learning experiences</div>
+          <div class="leaf"><strong>Law</strong> — designs legal systems & institutional rules</div>
+          <div class="leaf"><strong>Computer Science</strong> — designs programs, algorithms, computational systems</div>
+          <div class="leaf"><strong>Public Administration</strong> — designs policies, governance structures</div>
+          <div class="leaf">All share a common concern: <strong>design</strong> — creating artifacts that achieve goals in given environments</div>
+        </div>
+      </div>
+
+      <!-- Branch 3 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">⚠️</span>
+          <span class="branch-label">The Crisis of Identity</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf">Professional schools tried to gain academic <strong>respectability</strong> by adopting natural science methodology</div>
+          <div class="leaf">This led to a <strong>loss of distinctive identity</strong> — teaching analysis over synthesis, description over design</div>
+          <div class="leaf"><em>"Engineers became physicists, business schools became economics departments"</em></div>
+          <div class="leaf">Design curriculum was <strong>squeezed out</strong> in favor of analytical, descriptive courses</div>
+          <div class="leaf">Result: graduates skilled in analysis but <strong>poorly trained in the art of design</strong></div>
+        </div>
+      </div>
+
+      <!-- Branch 4 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🎯</span>
+          <span class="branch-label">Natural vs. Artificial: Key Distinctions</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf"><strong>Natural things:</strong> shaped by natural laws alone — rocks, weather, organisms (qua biological systems)</div>
+          <div class="leaf"><strong>Artificial things:</strong> designed by humans to serve <em>purposes</em> and <em>goals</em> — they are shaped to fit their environment</div>
+          <div class="leaf">Artificial things are <strong>adapted to goals</strong> — they can be evaluated by how well they serve intended functions</div>
+          <div class="leaf">Artificial things involve <strong>imperatives</strong> (ought) alongside indicatives (is)</div>
+          <div class="leaf">Key: artificial things are an <strong>interface</strong> between inner environment (structure) and outer environment (context)</div>
+        </div>
+      </div>
+
+      <!-- Branch 5 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🔄</span>
+          <span class="branch-label">Implications for Public Management</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf">Public organizations are <strong>artificial artifacts</strong> — designed systems, not natural phenomena</div>
+          <div class="leaf">Studying them requires understanding <strong>design intent</strong>, not just behavioral patterns</div>
+          <div class="leaf">Policy-making is fundamentally a <strong>design activity</strong> — crafting solutions to achieve goals in complex environments</div>
+          <div class="leaf">Public management should reclaim <strong>design thinking</strong> as core to the discipline, not just analytical methods</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note-box">
+      <strong>💡 Key Takeaway:</strong> Simon argues that many academic disciplines (especially professional schools) study artificial phenomena but have lost their design-oriented identity by imitating natural sciences. A proper "science of the artificial" would restore design as the central intellectual activity.
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAP 2: Representing Particular Machines ===== -->
+<div class="map-container" id="map1">
+  <div class="mind-map">
+    <div class="root-node">
+      Representing<br>Particular Machines
+    </div>
+    <div class="connector-line"></div>
+    <div class="branches">
+
+      <!-- Branch 1 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🔑</span>
+          <span class="branch-label">The Artifact as Interface</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf">Every artifact sits at the <strong>meeting point</strong> of two environments</div>
+          <div class="leaf"><strong>Inner environment</strong> — the substance, structure, and organization of the artifact itself</div>
+          <div class="leaf"><strong>Outer environment</strong> — the surroundings in which the artifact operates and must achieve its purposes</div>
+          <div class="leaf">The artifact is the <strong>interface</strong> between these two — it mediates between inner structure and outer demands</div>
+          <div class="leaf"><em>"If the inner environment is appropriate to the outer environment, the artifact will serve its intended purpose"</em></div>
+        </div>
+      </div>
+
+      <!-- Branch 2 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🔀</span>
+          <span class="branch-label">Functional Equivalence (Multiple Realization)</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf"><strong>Many different inner environments</strong> can satisfy the same outer environment requirements</div>
+          <div class="leaf">Example: a clock can use mechanical gears, quartz crystal, or atomic oscillation — all tell time</div>
+          <div class="leaf">Example: a building can be made of wood, stone, or steel — all provide shelter</div>
+          <div class="leaf">This means the <strong>function</strong> of an artifact can be described <em>independently</em> of its specific structure</div>
+          <div class="leaf">Implication: we can study what a machine <strong>does</strong> without knowing exactly <strong>how</strong> it does it internally</div>
+        </div>
+      </div>
+
+      <!-- Branch 3 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">📋</span>
+          <span class="branch-label">Two Modes of Description</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf"><strong>State description</strong> — describes the <em>properties</em> of the world (what it looks like at a point in time)</div>
+          <div class="sub-leaf">Blueprints, photographs, structural diagrams</div>
+          <div class="sub-leaf">Answers: "What IS this thing?"</div>
+          <div class="leaf"><strong>Process description</strong> — describes the <em>actions</em> needed to produce or operate something</div>
+          <div class="sub-leaf">Recipes, algorithms, instructions, programs</div>
+          <div class="sub-leaf">Answers: "How do you MAKE or RUN this thing?"</div>
+          <div class="leaf">Both are needed: state descriptions tell us the <strong>goal</strong>; process descriptions tell us the <strong>path</strong></div>
+          <div class="leaf">A key challenge is <strong>translating</strong> between them — going from "what we want" to "how to achieve it"</div>
+        </div>
+      </div>
+
+      <!-- Branch 4 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🖥️</span>
+          <span class="branch-label">Simulation as Representation</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf"><strong>Simulation</strong> = creating a simplified model that mimics the behavior of a system</div>
+          <div class="leaf">We can represent a machine by <strong>simulating its behavior</strong> without replicating its exact physical structure</div>
+          <div class="leaf">A computer can simulate a weather system, a factory, an economy — all are artificial representations</div>
+          <div class="leaf">Simulation bridges <strong>state and process</strong> descriptions: we define initial states, apply rules, observe outcomes</div>
+          <div class="leaf">Key insight: simulation is a <strong>third mode of understanding</strong> — neither pure theory nor pure experiment</div>
+        </div>
+      </div>
+
+      <!-- Branch 5 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">📐</span>
+          <span class="branch-label">Hierarchy & Near-Decomposability</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf">Complex artifacts can be described as <strong>hierarchies</strong> of subsystems</div>
+          <div class="leaf"><strong>Near-decomposability:</strong> subsystems interact strongly within themselves but <em>weakly</em> with each other</div>
+          <div class="leaf">This allows us to <strong>study each level independently</strong> — simplifying representation of complex machines</div>
+          <div class="leaf">Example: a car → engine system, electrical system, braking system — each analysable on its own</div>
+          <div class="leaf">Enables practical design: solve sub-problems separately, then <strong>integrate at the interface</strong></div>
+        </div>
+      </div>
+
+      <!-- Branch 6 -->
+      <div class="branch">
+        <div class="branch-header" onclick="toggle(this)">
+          <span class="branch-icon">🔄</span>
+          <span class="branch-label">Implications for Public Management</span>
+          <span class="branch-toggle">▶</span>
+        </div>
+        <div class="sub-branches">
+          <div class="leaf">Public organizations are <strong>complex machines</strong> — representable through inner/outer environment analysis</div>
+          <div class="leaf">Policy outcomes depend on the <strong>fit</strong> between organizational design (inner) and societal needs (outer)</div>
+          <div class="leaf">Functional equivalence: <strong>many different organizational structures</strong> can achieve the same policy goals</div>
+          <div class="leaf">Near-decomposability helps manage complexity: <strong>departments/agencies</strong> as semi-independent subsystems</div>
+          <div class="leaf">Simulation and modeling can help <strong>test policy designs</strong> before implementation</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note-box">
+      <strong>💡 Key Takeaway:</strong> Simon shows that any particular machine (artifact) can be understood through its inner/outer environment interface, described via state or process descriptions, simulated, and decomposed hierarchically. These tools of representation apply equally to physical machines and to organizational/policy systems.
+    </div>
+  </div>
+</div>
+
+<script>
+function showMap(idx) {
+  document.querySelectorAll('.map-container').forEach((m, i) => {
+    m.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+}
+
+function toggle(el) {
+  el.classList.toggle('expanded');
+  const sub = el.nextElementSibling;
+  if (sub) sub.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
