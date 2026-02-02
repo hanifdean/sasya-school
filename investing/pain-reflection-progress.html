@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pain + Reflection = Progress — Investing & Markets</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-alt: #1a1a2e;
+    --surface-hover: #1e1e2a;
+    --border: #1e1e2e;
+    --border-alt: #2a2a4a;
+    --text: #e8e8ed;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --text-dimmer: #4b5563;
+    --accent: #5ec4b6;
+    --accent-light: #34d399;
+    --accent-glow: rgba(94, 196, 182, 0.12);
+    --highlight-text: #fbbf24;
+    --worth-accent: #a78bfa;
+    --red: #ef4444;
+    --red-glow: rgba(239, 68, 68, 0.12);
+    --orange: #f59e0b;
+    --orange-glow: rgba(245, 158, 11, 0.12);
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --text-dimmer: #a5a09a;
+    --accent: #1a8a7d;
+    --accent-light: #059669;
+    --accent-glow: rgba(26, 138, 125, 0.06);
+    --highlight-text: #b45309;
+    --worth-accent: #7c3aed;
+    --red: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.08);
+    --orange: #d97706;
+    --orange-glow: rgba(217, 119, 6, 0.08);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: 0 auto 0;
+    padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none;
+    border: 1.5px solid var(--border-alt);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Title */
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--accent), #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 36px;
+    font-weight: 500;
+  }
+  .subtitle a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .subtitle a:hover { text-decoration: underline; }
+
+  /* Section title */
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .emoji { font-size: 20px; }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .card p, .card li {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .card ul {
+    margin: 12px 0;
+    padding-left: 20px;
+  }
+  .card li {
+    margin-bottom: 8px;
+  }
+  .card li strong {
+    color: var(--text);
+  }
+
+  /* Highlight box */
+  .highlight-box {
+    background: var(--accent-glow);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+  .highlight-box p {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .highlight-box.warning {
+    background: var(--red-glow);
+    border-color: var(--red);
+  }
+  .highlight-box.warning p {
+    color: var(--red);
+  }
+  .highlight-box.warm {
+    background: var(--orange-glow);
+    border-color: var(--orange);
+  }
+  .highlight-box.warm p {
+    color: var(--orange);
+  }
+
+  /* Stat row */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .stat-box {
+    background: var(--surface-alt);
+    border: 1px solid var(--border-alt);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-box .value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .stat-box .value.red { color: var(--red); }
+  .stat-box .value.orange { color: var(--orange); }
+  .stat-box .label {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Gamma diagram */
+  .gamma-diagram {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 20px 0;
+  }
+  .gamma-channel {
+    background: var(--surface-alt);
+    border: 1.5px solid var(--border-alt);
+    padding: 20px 24px;
+    position: relative;
+  }
+  .gamma-channel:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+  .gamma-channel:last-child {
+    border-radius: 0 0 12px 12px;
+  }
+  .gamma-channel:not(:last-child) {
+    border-bottom: none;
+  }
+  .gamma-channel .channel-num {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .gamma-channel .channel-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .gamma-channel .channel-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .gamma-channel .channel-arrow {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--red);
+  }
+
+  /* Flow visual */
+  .flow-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    background: var(--surface-alt);
+    border: 1.5px solid var(--border-alt);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .flow-node .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .flow-node .name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .flow-node.highlight {
+    border-color: var(--accent);
+    background: rgba(94, 196, 182, 0.06);
+  }
+  .flow-node.highlight .name { color: var(--accent); }
+  .flow-node.danger {
+    border-color: var(--red);
+    background: var(--red-glow);
+  }
+  .flow-node.danger .name { color: var(--red); }
+  .flow-arrow {
+    font-size: 18px;
+    color: var(--text-dimmer);
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* Lesson list */
+  .lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .lesson-item {
+    background: var(--surface-alt);
+    border: 1px solid var(--border-alt);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .lesson-item .lesson-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .lesson-item h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .lesson-item p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Sigma scale */
+  .sigma-scale {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border-alt);
+    border-radius: 12px;
+  }
+  .sigma-bar {
+    flex: 1;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+  .sigma-bar .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.3s ease;
+  }
+  .sigma-bar .bar-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-top: 6px;
+    text-align: center;
+  }
+  .sigma-bar .bar-sub {
+    font-size: 9px;
+    color: var(--text-dimmer);
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  /* Blockquote */
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 12px 20px;
+    margin: 16px 0;
+    background: var(--accent-glow);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+  }
+  blockquote p {
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+  }
+
+  /* Source */
+  .source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 32px;
+    padding: 10px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: border-color 0.2s;
+  }
+  .source-link:hover {
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 24px 16px; }
+    h1 { font-size: 22px; }
+    .card { padding: 20px; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .flow-visual { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .gamma-channel .channel-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="top-bar">
+  <a href="../" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+    <span id="theme-icon">☀️</span>
+  </button>
+</div>
+
+<h1>🔥 Pain + Reflection = Progress</h1>
+<p class="subtitle">Lessons from a 6-sigma silver crash — by <a href="https://x.com/abcampbell" target="_blank">@abcampbell</a> (Campbell, Rose Technology)</p>
+
+<!-- ===== 1. THE EQUATION ===== -->
+<div class="card">
+  <div class="section-title"><span class="emoji">🧠</span> Pain + Reflection = Progress</div>
+  <blockquote>
+    <p>"Pain + Reflection = Progress" — Ray Dalio</p>
+  </blockquote>
+  <p>The emotional side of investing is underrated. The best investors in the world bat <strong>55-60%</strong>. That means even the greats are wrong 40-45% of the time.</p>
+  <div class="stat-row" style="margin-top:20px;">
+    <div class="stat-box">
+      <div class="value">55-60%</div>
+      <div class="label">Best investors' hit rate</div>
+    </div>
+    <div class="stat-box">
+      <div class="value red">40-45%</div>
+      <div class="label">How often they're wrong</div>
+    </div>
+  </div>
+  <p style="margin-top:16px;">Humility isn't optional — it's the price of admission. Every drawdown is either a lesson or a scar. The difference is whether you reflect or just react.</p>
+</div>
+
+<!-- ===== 2. WHAT 6-SIGMA FEELS LIKE ===== -->
+<div class="card">
+  <div class="section-title"><span class="emoji">📉</span> What 6-Sigma Feels Like</div>
+  <p>Friday's silver crash was one of the largest in <strong>275 years</strong>. The volatility surface was pricing approximately <strong>3-sigma</strong> as the tail risk scenario. What actually happened was <strong>6-sigma</strong>.</p>
+
+  <div class="sigma-scale">
+    <div class="sigma-bar">
+      <div class="bar" style="height:20px; background: var(--accent);"></div>
+      <div class="bar-label">1σ</div>
+      <div class="bar-sub">68%</div>
+    </div>
+    <div class="sigma-bar">
+      <div class="bar" style="height:35px; background: var(--accent);"></div>
+      <div class="bar-label">2σ</div>
+      <div class="bar-sub">95%</div>
+    </div>
+    <div class="sigma-bar">
+      <div class="bar" style="height:55px; background: var(--orange);"></div>
+      <div class="bar-label">3σ</div>
+      <div class="bar-sub">Priced</div>
+    </div>
+    <div class="sigma-bar">
+      <div class="bar" style="height:75px; background: var(--text-dimmer);"></div>
+      <div class="bar-label">4σ</div>
+      <div class="bar-sub">99.99%</div>
+    </div>
+    <div class="sigma-bar">
+      <div class="bar" style="height:95px; background: var(--text-dimmer);"></div>
+      <div class="bar-label">5σ</div>
+      <div class="bar-sub">~0</div>
+    </div>
+    <div class="sigma-bar">
+      <div class="bar" style="height:120px; background: var(--red);"></div>
+      <div class="bar-label">6σ</div>
+      <div class="bar-sub">💥 Actual</div>
+    </div>
+  </div>
+
+  <div class="highlight-box warning">
+    <p>The market was hedged for a 3-sigma tail. It got a 6-sigma event — one of the largest silver moves in 275 years of data.</p>
+  </div>
+  <p style="margin-top:12px;">When your risk model says "this is the worst case" and the actual event is <em>orders of magnitude beyond that</em>, it's not a failure of the trade thesis — it's a failure of the risk framework. The vol surface was wrong.</p>
+</div>
+
+<!-- ===== 3. SHORT GAMMA MECHANICS ===== -->
+<div class="card">
+  <div class="section-title"><span class="emoji">⚡</span> Short Gamma Mechanics — 3 Channels of Amplification</div>
+  <p>The crash wasn't just selling. It was a <strong>mechanical cascade</strong> through three distinct short gamma channels, each feeding the others:</p>
+
+  <div class="gamma-diagram" style="margin-top:20px;">
+    <div class="gamma-channel">
+      <div class="channel-num">Channel 1</div>
+      <div class="channel-title">💥 Excess Leverage</div>
+      <div class="channel-desc">Margin calls force leveraged longs to sell into a falling market. The more it drops, the more they must sell. Forced liquidation creates a self-reinforcing loop — selling begets more selling.</div>
+      <div class="channel-arrow">↘</div>
+    </div>
+    <div class="gamma-channel">
+      <div class="channel-num">Channel 2</div>
+      <div class="channel-title">📊 Short Option Gamma</div>
+      <div class="channel-desc">Market makers who sold options must delta-hedge by selling the underlying as price falls. The faster it drops, the more they sell. This is the textbook gamma squeeze — except in reverse.</div>
+      <div class="channel-arrow">↘</div>
+    </div>
+    <div class="gamma-channel">
+      <div class="channel-num">Channel 3</div>
+      <div class="channel-title">🏗️ Levered ETFs</div>
+      <div class="channel-desc">AGQ ($5B AUM, 2x levered silver ETF) had to mechanically dump ~$4B of silver exposure to rebalance. This is not discretionary — it's a mathematical requirement. The ETF <em>must</em> sell at end of day to maintain its leverage ratio.</div>
+      <div class="channel-arrow">↘</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;">
+    <p style="font-size:14px; color: var(--text-secondary); font-weight:600; margin-bottom:12px;">The Cascade:</p>
+    <div class="flow-visual">
+      <div class="flow-node">
+        <div class="label">Trigger</div>
+        <div class="name">Price Drop</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node danger">
+        <div class="label">Ch. 1</div>
+        <div class="name">Margin Calls</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node danger">
+        <div class="label">Ch. 2</div>
+        <div class="name">Delta Hedging</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node danger">
+        <div class="label">Ch. 3</div>
+        <div class="name">ETF Rebalance</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node" style="border-color: var(--red);">
+        <div class="label">Result</div>
+        <div class="name" style="color: var(--red);">6σ Crash</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box warm" style="margin-top:16px;">
+    <p>Key insight: Most market participants didn't know how much hidden short gamma existed across all three channels simultaneously. The gamma was invisible until it detonated.</p>
+  </div>
+</div>
+
+<!-- ===== 4. CHINA PREMIUM ===== -->
+<div class="card">
+  <div class="section-title"><span class="emoji">🇨🇳</span> The "China Premium" — Dog Wagging the Western Tail</div>
+  <p>Western metals investors systematically <strong>underestimate</strong> the influence of Eastern demand on commodity prices. Three blind spots:</p>
+  <ul>
+    <li><strong>East demand magnitude</strong> — Chinese physical demand for silver (industrial + investment) is massive and growing. Solar panel manufacturing alone is a structural demand driver.</li>
+    <li><strong>Overnight session returns</strong> — A disproportionate share of metals returns accrue during the Asian trading session. If you're only watching COMEX, you're seeing half the picture.</li>
+    <li><strong>Chinese capital flight</strong> — With property markets under stress and capital controls tightening, precious metals become a vehicle for capital preservation and transfer. This is not speculative demand — it's structural.</li>
+  </ul>
+
+  <div class="stat-row" style="margin-top:20px;">
+    <div class="stat-box">
+      <div class="value">🌏</div>
+      <div class="label">East drives prices</div>
+    </div>
+    <div class="stat-box">
+      <div class="value">🌙</div>
+      <div class="label">Overnight session matters</div>
+    </div>
+    <div class="stat-box">
+      <div class="value">🏠→🥈</div>
+      <div class="label">Property → Metals</div>
+    </div>
+  </div>
+
+  <blockquote style="margin-top:16px;">
+    <p>The Western metals narrative focuses on Fed policy and dollar strength. The actual price driver is increasingly East — and most Western investors aren't watching.</p>
+  </blockquote>
+</div>
+
+<!-- ===== 5. THESIS vs POSITIONING ===== -->
+<div class="card">
+  <div class="section-title"><span class="emoji">🎯</span> Thesis Unchanged, Positioning Changed</div>
+  <p>The fundamental bull case for silver remains intact. What changed was the <em>positioning</em> and <em>price</em>, not the <em>thesis</em>:</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;">
+    <div style="background: var(--accent-glow); border: 1px solid var(--accent); border-radius: 12px; padding: 20px;">
+      <div style="font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 10px;">✅ UNCHANGED (Thesis)</div>
+      <ul style="padding-left: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+        <li>Solar panel demand growth</li>
+        <li>Chinese capital flight into metals</li>
+        <li>Supply constraints (mine depletion)</li>
+        <li>Structural industrial demand</li>
+      </ul>
+    </div>
+    <div style="background: var(--red-glow); border: 1px solid var(--red); border-radius: 12px; padding: 20px;">
+      <div style="font-size: 13px; font-weight: 700; color: var(--red); margin-bottom: 10px;">⚠️ CHANGED (Positioning)</div>
+      <ul style="padding-left: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+        <li>Price level (post-crash)</li>
+        <li>Market positioning washed out</li>
+        <li>Hidden short gamma exposed</li>
+        <li>Sentiment reset</li>
+      </ul>
+    </div>
+  </div>
+
+  <p>Separating thesis from positioning is critical. When you conflate the two, a drawdown feels like being wrong. When you separate them, a drawdown is either a buying opportunity or a risk management lesson — but it doesn't mean the thesis is broken.</p>
+</div>
+
+<!-- ===== 6. MONEY WISDOM LESSONS ===== -->
+<div class="card">
+  <div class="section-title"><span class="emoji">💡</span> Money Wisdom — Lessons Learned</div>
+
+  <div class="lesson-grid">
+    <div class="lesson-item">
+      <div class="lesson-icon">🛡️</div>
+      <h4>Diversify & Hedge</h4>
+      <p>Concentration kills. Even if the thesis is right, position sizing and hedging determine whether you survive to be proven right. Humility about tail risk isn't weakness — it's survival.</p>
+    </div>
+    <div class="lesson-item">
+      <div class="lesson-icon">🔍</div>
+      <h4>Know Your Gamma Exposure</h4>
+      <p>Understand the actual gamma in the market — not just your own positions, but the levered ETFs, the options open interest, the margin levels. If you can't quantify the gamma, you can't quantify the risk.</p>
+    </div>
+    <div class="lesson-item">
+      <div class="lesson-icon">🎤</div>
+      <h4>Audience ≠ Allocation</h4>
+      <p>Don't let audience pressure (followers, subscribers, public calls) influence your position sizing. Public conviction and private risk management must be separate. The crowd rewards boldness; the market rewards discipline.</p>
+    </div>
+    <div class="lesson-item">
+      <div class="lesson-icon">⚙️</div>
+      <h4>See Gamma Before It Hits</h4>
+      <p>Recognize short gamma mechanics before they trigger. By the time the cascade starts, it's too late. The playbook: identify levered products, measure options open interest, check margin levels — before the move, not during.</p>
+    </div>
+    <div class="lesson-item">
+      <div class="lesson-icon">🧠</div>
+      <h4>Separate Thesis from Position</h4>
+      <p>A thesis can be right while a position is wrong. Timing, sizing, and leverage are independent variables from fundamental analysis. Manage them independently.</p>
+    </div>
+    <div class="lesson-item">
+      <div class="lesson-icon">📊</div>
+      <h4>Respect the Tail</h4>
+      <p>If the vol surface says 3-sigma is the tail, assume 6-sigma is possible. Models are maps, not territory. The market doesn't care about your confidence interval.</p>
+    </div>
+  </div>
+</div>
+
+<a href="https://x.com/abcampbell/status/2017748786437632273" target="_blank" class="source-link">
+  🔗 Original thread by @abcampbell on X
+</a>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.addEventListener('DOMContentLoaded', () => {
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    });
+  }
+})();
+</script>
+</body>
+</html>
