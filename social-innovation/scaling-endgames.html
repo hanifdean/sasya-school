@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scaling Endgames & Ultimate Payor</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-alt: #1a1a2e;
+    --surface-hover: #1e1e2a;
+    --border: #1e1e2e;
+    --border-alt: #2a2a4a;
+    --text: #e8e8ed;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --accent: #5ec4b6;
+    --accent-glow: rgba(94, 196, 182, 0.12);
+    --green: #34d399;
+    --green-glow: rgba(52, 211, 153, 0.12);
+    --red: #ef4444;
+    --red-glow: rgba(239, 68, 68, 0.12);
+    --orange: #f59e0b;
+    --orange-glow: rgba(245, 158, 11, 0.12);
+    --highlight: #fbbf24;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --accent: #1a8a7d;
+    --accent-glow: rgba(26, 138, 125, 0.06);
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.08);
+    --red: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.08);
+    --orange: #d97706;
+    --orange-glow: rgba(217, 119, 6, 0.08);
+    --highlight: #b45309;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 800px; margin: 0 auto; padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none; border: 1.5px solid var(--border-alt); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero { text-align: center; margin: 2rem 0 3rem; animation: fadeUp 0.6s ease-out; }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-glow); padding: 6px 14px;
+    border-radius: 6px; margin-bottom: 16px; font-weight: 700;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .hero .subtitle { color: var(--text-muted); font-size: 14px; }
+
+  .section { margin-bottom: 2.5rem; animation: fadeUp 0.6s ease-out; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: var(--accent);
+    margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .section h3 { font-size: 15px; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+  .section p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 1rem;
+  }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 0.5rem; }
+  .card p { margin-bottom: 0.4rem; }
+
+  .highlight-box {
+    background: var(--accent-glow); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .highlight-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .highlight-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0;
+  }
+  th, td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 700; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  td { color: var(--text-secondary); }
+
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin: 1rem 0;
+  }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem; text-align: center;
+  }
+  .metric .value { font-size: 20px; font-weight: 800; color: var(--accent); }
+  .metric .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .timeline { margin: 1rem 0; }
+  .timeline-item {
+    display: flex; gap: 1rem; padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-year { font-weight: 700; color: var(--accent); min-width: 60px; font-size: 13px; }
+  .timeline-desc { font-size: 13px; color: var(--text-secondary); }
+
+  .footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; color: var(--text-dim);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  .page-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .content { flex: 1; min-width: 0; }
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface-hover);
+  }
+  .section-nav a.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-glow) inset;
+  }
+  .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .top-bar { max-width: 100%; padding-bottom: 12px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links {
+      flex-direction: row;
+      gap: 8px;
+    }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .section-nav a.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .section { animation: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+</div>
+
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+<div class="container">
+  <div class="hero">
+    <span class="tag">Social Innovation & Design — Framework</span>
+    <h1>🧭 Scaling Endgames & Ultimate Payor</h1>
+    <p class="subtitle">How impact organizations scale, what endgames exist, and who ultimately pays at maturity.</p>
+  </div>
+
+  <div class="section">
+    <h2>🧩 The 6 Endgames for Scaling Impact</h2>
+    <p>Once an organization breaks out of early scaling, it can head toward six different endgames. Each path changes who pays and how you design the model.</p>
+
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">1. Sustained Service</div>
+        <p>Org keeps running and growing with the biggest long-term budget. Example: <strong>BRAC</strong>.</p>
+        <p><strong>Payor:</strong> Donors + user fees.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Commercial Adoption</div>
+        <p>Private sector takes the model to scale. Example: <strong>M-Pesa</strong>.</p>
+        <p><strong>Payor:</strong> Market / commercial customers.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">3. Government Adoption</div>
+        <p>The model is absorbed into public services and policy.</p>
+        <p><strong>Payor:</strong> Taxpayers.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">4. Replication</div>
+        <p>Others copy the model independently across regions or orgs.</p>
+        <p><strong>Payor:</strong> Distributed funders.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">5. Open Source</div>
+        <p>Blueprint is given away; ongoing cost is minimal.</p>
+        <p><strong>Payor:</strong> Minimal / none.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">6. Mission Achievement</div>
+        <p>Problem is solved and the org winds down — rarest outcome.</p>
+        <p><strong>Payor:</strong> Nobody.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>💳 Payor Implications by Endgame</h2>
+    <table>
+      <tr><th>Endgame</th><th>Ultimate Payor</th><th>Notes</th></tr>
+      <tr><td>Sustained Service</td><td>Donors + fees</td><td>Largest budgets; long-term fundraising capacity required.</td></tr>
+      <tr><td>Commercial Adoption</td><td>Market / commercial</td><td>Private sector scales what customers will pay for.</td></tr>
+      <tr><td>Government Adoption</td><td>Taxpayers</td><td>Integrated into public systems and budget cycles.</td></tr>
+      <tr><td>Replication</td><td>Distributed funders</td><td>Multiple orgs cover costs independently.</td></tr>
+      <tr><td>Open Source</td><td>Minimal</td><td>Ongoing cost is low; stewardship remains light.</td></tr>
+      <tr><td>Mission Achievement</td><td>Nobody</td><td>Problem solved; organization sunsets.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>📈 Growth Curve to Endgames</h2>
+    <div class="card">
+      <p><strong>Start-up → Proof of Concept → Early Scaling → Breakout Scaling → Endgames diverge.</strong></p>
+      <p>Early stages test product-market fit and evidence. Breakout scaling is the last shared phase; after that, the path depends on which endgame is realistic given the payor.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🏦 The Ultimate Payor</h2>
+    <p>The <strong>Ultimate Payor</strong> asks who bears the cost at scale when grants disappear. In the long run there are only three possibilities.</p>
+
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="value">User / Customer</div>
+        <div class="label">Direct fees, subscriptions</div>
+      </div>
+      <div class="metric">
+        <div class="value">Government / Taxpayer</div>
+        <div class="label">Public budgets, reimbursements</div>
+      </div>
+      <div class="metric">
+        <div class="value">Market / Commercial</div>
+        <div class="label">Private sector adoption</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <div class="label">✅ The Simple Test</div>
+    <p><strong>"If all grants disappeared tomorrow, who would keep paying?"</strong></p>
+    <p>This question surfaces the real endgame — and whether the model can survive beyond philanthropy.</p>
+  </div>
+
+  <div class="section">
+    <h2>🔁 Pay for Success / Social Impact Bonds</h2>
+    <p>Pay-for-success structures create a circular accountability loop: funders take upfront risk, service providers deliver, evaluators verify, and government pays only for outcomes.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="timeline-year">1</span>
+        <span class="timeline-desc">Investors fund the program upfront.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2</span>
+        <span class="timeline-desc">Service providers deliver interventions.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-year">3</span>
+        <span class="timeline-desc">Independent evaluators measure outcomes.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-year">4</span>
+        <span class="timeline-desc">Government repays investors only if targets are met.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🧭 Case Applications</h2>
+
+    <div class="card">
+      <div class="card-title">Compartamos → Commercial Adoption (IPO)</div>
+      <p>Microfinance scaled via private markets, culminating in a public listing — a classic commercial endgame.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">OneDay Health → Government Adoption or Replication</div>
+      <p>Community health clinics could be absorbed into public systems or replicated by peer orgs across regions.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Insulin → Intended Open Source, Hijacked into Commercial Adoption</div>
+      <p>Insulin was meant to be open-access medicine but became privatized, with commercial payors dominating.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚠️ OneDay Health — Risk Analysis</h2>
+    <table>
+      <tr><th>Risk Area</th><th>Key Concerns</th></tr>
+      <tr><td>Demand-Side</td><td>Trust in clinics, ability to pay, health-seeking behavior.</td></tr>
+      <tr><td>Supply-Side</td><td>Staff retention, consistent quality, supply chain reliability.</td></tr>
+      <tr><td>Financial</td><td>Volume-dependent revenue, no buffer, donor dependency.</td></tr>
+      <tr><td>External</td><td>Policy shifts, disease outbreaks, currency volatility.</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    Social Innovation & Design — Study Hub · Built with 🐱 by Robin
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('theme-icon').textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+function slugifyHeading(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function initSectionNav() {
+  const navLinks = document.getElementById('section-nav-links');
+  if (!navLinks) return;
+
+  let headings = Array.from(document.querySelectorAll('.section h2'));
+  if (!headings.length) {
+    headings = Array.from(document.querySelectorAll('.section-title, h2'));
+  }
+  if (!headings.length) return;
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      heading.id = slugifyHeading(heading.textContent || '');
+    }
+  });
+
+  navLinks.innerHTML = '';
+  headings.forEach((heading) => {
+    const link = document.createElement('a');
+    link.className = 'section-link';
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent || '';
+    navLinks.appendChild(link);
+  });
+
+  const linkMap = new Map();
+  navLinks.querySelectorAll('a').forEach((link) => {
+    const targetId = link.getAttribute('href').slice(1);
+    linkMap.set(targetId, link);
+    link.addEventListener('click', () => setActive(targetId));
+  });
+
+  function setActive(id) {
+    linkMap.forEach((link) => {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    });
+    const activeLink = linkMap.get(id);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      activeLink.setAttribute('aria-current', 'true');
+    }
+  }
+
+  setActive(headings[0].id);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initSectionNav();
+});
+
+</script>
+</body>
+</html>
