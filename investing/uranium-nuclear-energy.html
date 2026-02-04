@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uranium & Nuclear Energy — The AI Power Play</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f0f14;
+    --surface: #171720;
+    --surface-alt: #1f1f2a;
+    --surface-hover: #242433;
+    --border: #2a2a35;
+    --border-alt: #333344;
+    --text: #ece9e3;
+    --text-secondary: #d5d1c7;
+    --text-muted: #9a9488;
+    --text-dim: #766f64;
+    --text-dimmer: #5b554c;
+    --accent: #f59e0b;
+    --accent-soft: rgba(245, 158, 11, 0.14);
+    --accent-glow: rgba(245, 158, 11, 0.2);
+    --highlight: #fbbf24;
+    --green: #34d399;
+    --red: #f87171;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --text-dimmer: #a5a09a;
+    --accent: #d97706;
+    --accent-soft: rgba(217, 119, 6, 0.1);
+    --accent-glow: rgba(217, 119, 6, 0.15);
+    --highlight: #b45309;
+    --green: #059669;
+    --red: #dc2626;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .page-layout {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+
+  .content { flex: 1; min-width: 0; }
+
+  .container { max-width: 980px; }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .back-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .theme-toggle {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  h1 {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--highlight);
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+
+  .section {
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease-out both;
+  }
+
+  .section h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+  }
+
+  .stat-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+  .stat-card .value {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .stat-card .note {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border-alt);
+    color: var(--text-muted);
+  }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    text-align: left;
+    padding: 10px 12px;
+    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tbody tr.highlight td { color: var(--highlight); font-weight: 600; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 18px;
+  }
+
+  .list {
+    display: grid;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .list strong { color: var(--text); }
+
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .case-card {
+    border-radius: 14px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .case-card.bull { border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.06); }
+  .case-card.bear { border-color: rgba(248, 113, 113, 0.4); background: rgba(248, 113, 113, 0.05); }
+  .case-card h3 { font-size: 14px; margin-bottom: 8px; }
+  .case-card ul { padding-left: 16px; font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+  .verdict {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), transparent);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+  }
+
+  .flow-diagram {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .flow-step {
+    background: var(--surface-alt);
+    border: 1px solid var(--border-alt);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 12px;
+    text-align: center;
+    color: var(--text-secondary);
+    position: relative;
+  }
+  .flow-step strong { display: block; font-size: 12px; color: var(--text); margin-bottom: 4px; }
+  .flow-step:after {
+    content: '➜';
+    position: absolute;
+    right: -18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  .flow-step:last-child:after { display: none; }
+
+  /* Inline jargon links */
+  .jargon {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1.5px dotted var(--accent);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .jargon:hover { color: var(--highlight); border-color: var(--highlight); }
+  .jargon-def { scroll-margin-top: 24px; }
+  .jargon-def:target {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 10px;
+    animation: jargon-flash 1.2s ease;
+  }
+  @keyframes jargon-flash {
+    0%, 100% { outline-color: transparent; }
+    20%, 80% { outline-color: var(--accent); }
+  }
+  .jargon-back {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 6px;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .jargon-back:hover { opacity: 1; color: var(--accent); }
+
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover { color: var(--accent); border-color: var(--border); background: var(--surface-hover); }
+  .section-nav a.active { color: var(--accent); background: var(--accent-soft); border-color: var(--accent); }
+
+  .footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    text-align: center;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .case-grid { grid-template-columns: 1fr; }
+    .flow-diagram { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    .flow-step:after { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links { flex-direction: row; gap: 8px; }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .section-nav a.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  }
+</style>
+</head>
+<body>
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+    <div class="container">
+      <div class="top-bar">
+        <a href="../" class="back-link">← Back to Study Hub</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+          <span id="theme-icon">☀️</span>
+        </button>
+      </div>
+
+      <h1>Uranium & Nuclear Energy: The AI Power Play</h1>
+      <p class="subtitle">AI data centers are forcing a rethink of baseload power. Nuclear is the only scalable, carbon-free source — and uranium is the bottleneck.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="label">Rack Power</div>
+          <div class="value">30–100kW</div>
+          <div class="note">vs 5–15kW legacy racks</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Mined Supply</div>
+          <div class="value">~75%</div>
+          <div class="note">of reactor demand</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Uranium Spot</div>
+          <div class="value">$101</div>
+          <div class="note">Jan 2026 high</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">US Reactors</div>
+          <div class="value">94</div>
+          <div class="note">+ 294 pledged</div>
+        </div>
+      </div>
+
+      <section class="section" id="executive-summary">
+        <h2>⚡ Executive Summary</h2>
+        <div class="card">
+          <div class="list">
+            <div><strong>Why uranium matters now:</strong> AI data centers require 24/7 carbon-free <a class="jargon" href="#jargon-baseload">baseload power</a>; intermittent renewables can’t carry the load.</div>
+            <div><strong>Nuclear checks all the boxes:</strong> always-on, carbon-free, energy-dense, and scalable — the only source that meets hyperscaler requirements.</div>
+            <div><strong>Structural deficit:</strong> supply has lagged for years while demand accelerates, setting up a multi-year bull case for uranium.</div>
+          </div>
+          <div class="pill-row">
+            <span class="pill">Energy-dense</span>
+            <span class="pill">Carbon-free</span>
+            <span class="pill">Baseload 24/7</span>
+            <span class="pill">Supply deficit</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="ai-nuclear-connection">
+        <h2>🧠 The AI → Nuclear → Uranium Connection</h2>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="list">
+            <div><strong>Power density shock:</strong> AI racks require 30–100kW vs 5–15kW traditional racks — a 6–10x jump.</div>
+            <div><strong>Grid friction:</strong> wholesale power near cluster hubs up 267%; interconnect queues are 3–5 years.</div>
+            <div><strong>Big Tech goes nuclear:</strong> Microsoft (Three Mile Island restart), Google (Kairos <a class="jargon" href="#jargon-smr">SMRs</a>), Meta (6+ GW nuclear deals), Amazon (SMR investments).</div>
+            <div><strong>CapEx wave:</strong> McKinsey forecasts $6.7T in data center infrastructure investment through 2030.</div>
+            <div><strong>Load forecast:</strong> Goldman expects a 165% increase in data center power demand by 2030.</div>
+          </div>
+        </div>
+        <div class="card">
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
+            For more on the physical AI stack, see <a class="jargon" href="../ai-value-chain/layer6-energy-datacenters.html">Layer 6 — Energy & Data Centers</a> and <a class="jargon" href="../ai-value-chain/layer5-systems-networking.html">Layer 5 — Systems & Networking</a>.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" id="supply-chain">
+        <h2>⛓️ The Uranium Supply Chain (Deep Dive)</h2>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="flow-diagram">
+            <div class="flow-step"><strong>Mining</strong>Ore extraction</div>
+            <div class="flow-step"><strong>Milling</strong><a class="jargon" href="#jargon-yellowcake">Yellowcake</a></div>
+            <div class="flow-step"><strong>Conversion</strong><a class="jargon" href="#jargon-uf6">UF₆</a></div>
+            <div class="flow-step"><strong>Enrichment</strong><a class="jargon" href="#jargon-leu">LEU</a></div>
+            <div class="flow-step"><strong>Fuel Fabrication</strong>Pellets & assemblies</div>
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6;">Each step has unique chokepoints — especially conversion and enrichment, where the West is capacity-constrained.</p>
+        </div>
+
+        <div class="table-wrap" style="margin-bottom:16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>What Happens</th>
+                <th>Key Players</th>
+                <th>Bottlenecks</th>
+                <th>Geopolitical Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Mining</strong></td>
+                <td>Uranium ore extracted and refined into <a class="jargon" href="#jargon-u3o8">U₃O₈</a>.</td>
+                <td>Kazatomprom (KAP), Cameco (CCJ), Orano (private)</td>
+                <td>Slow permits, long lead times, sulfuric acid shortages.</td>
+                <td>Kazakhstan dependence (~40% global), sanctions risk.</td>
+              </tr>
+              <tr>
+                <td><strong>Milling</strong></td>
+                <td>Chemical processing to produce <a class="jargon" href="#jargon-yellowcake">yellowcake</a>.</td>
+                <td>Cameco (CCJ), Kazatomprom (KAP)</td>
+                <td>Often co-located; limited spare capacity.</td>
+                <td>Concentrated in Kazakhstan/Canada.</td>
+              </tr>
+              <tr>
+                <td><strong>Conversion</strong></td>
+                <td>U₃O₈ converted into gaseous <a class="jargon" href="#jargon-uf6">UF₆</a>.</td>
+                <td>Honeywell (U.S. — only facility), Orano (France)</td>
+                <td>Single U.S. plant, multi-year waitlists.</td>
+                <td>Western reliance on France/Canada.</td>
+              </tr>
+              <tr>
+                <td><strong>Enrichment</strong></td>
+                <td>Increase U-235 concentration into <a class="jargon" href="#jargon-leu">LEU</a> or <a class="jargon" href="#jargon-haleu">HALEU</a>.</td>
+                <td>Orano, Urenco, CNNC, Rosatom (95% control)</td>
+                <td>U.S. needs 10–12x capacity expansion; Urenco NM covers ~1/3 U.S. needs.</td>
+                <td>U.S. ban on Russian imports removes ~25% supply.</td>
+              </tr>
+              <tr>
+                <td><strong>Fuel Fabrication</strong></td>
+                <td>UF₆ turned into pellets and fuel assemblies.</td>
+                <td>Westinghouse (owned by Cameco + Brookfield)</td>
+                <td>Limited qualified suppliers for Western reactors.</td>
+                <td>Technology export controls.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="list">
+            <div><strong>Mining data:</strong> Kazatomprom supplies ~40% of global output and just cut 2026 production by 10%. Cameco ~15%, Orano ~10%.</div>
+            <div><strong>Conversion crunch:</strong> only one U.S. facility (Honeywell) creates multi-year waitlists.</div>
+            <div><strong>Enrichment choke:</strong> four companies control 95% of capacity; the U.S. ban on Russian enrichment removes a quarter of supply.</div>
+            <div><strong>Fabrication:</strong> Westinghouse is the key Western supplier, now backed by Cameco + Brookfield.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="supply-demand">
+        <h2>📈 Supply–Demand Dynamics</h2>
+        <div class="card">
+          <div class="list">
+            <div><strong>Structural deficit:</strong> mined supply covers only ~75% of reactor demand.</div>
+            <div><strong>Kazatomprom cuts:</strong> sulfuric acid shortages force production reductions.</div>
+            <div><strong>McArthur River ramp:</strong> Cameco’s flagship mine is ramping slower than expected.</div>
+            <div><strong>Russian enrichment ban:</strong> removes ~25% of U.S. enrichment supply.</div>
+            <div><strong>Permitting lag:</strong> new U.S. mines take 10+ years to permit and build.</div>
+            <div><strong>Demand surge:</strong> 94 U.S. reactors today; Trump pledged 294 more in 25 years.</div>
+            <div><strong>SMR wave:</strong> <a class="jargon" href="#jargon-smr">SMRs</a> need <a class="jargon" href="#jargon-haleu">HALEU</a>, increasing enrichment demand.</div>
+            <div><strong>International pull:</strong> India signed a $2.8B deal with Cameco; China is building at record pace.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="price-history">
+        <h2>💹 Uranium Price History & Outlook</h2>
+        <div class="table-wrap" style="margin-bottom:16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Timeline</th>
+                <th class="num">Spot Price</th>
+                <th class="num">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2020</td>
+                <td class="num">$30</td>
+                <td class="num">Post-Fukushima lows</td>
+              </tr>
+              <tr>
+                <td>2024</td>
+                <td class="num">$70</td>
+                <td class="num">Supply deficits emerge</td>
+              </tr>
+              <tr>
+                <td>2025</td>
+                <td class="num">$82</td>
+                <td class="num">Term contracting tightens</td>
+              </tr>
+              <tr class="highlight">
+                <td>Jan 2026</td>
+                <td class="num">$101</td>
+                <td class="num">First break above $100 since 2007</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="list">
+            <div><strong>SPUT buying:</strong> Sprott Physical Uranium Trust acquired 500K lbs and has a $214M war chest.</div>
+            <div><strong>Contract pricing:</strong> Cameco COO says new contracts already at $100–115 midpoint with ceilings at $150.</div>
+            <div><strong>Term range:</strong> $85–150/lb; analyst consensus $120–150+ as deficits intensify.</div>
+            <div><strong>Quote:</strong> “The uranium deficit is no longer a forecast — it is a reality.”</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="investable-map">
+        <h2>🗺️ The Investable Map</h2>
+        <div class="table-wrap" style="margin-bottom:16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Tier</th>
+                <th>Company</th>
+                <th class="num">Ticker</th>
+                <th class="num">Why It Matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="highlight">
+                <td>Tier 1 — Large-Cap Miners</td>
+                <td>Cameco</td>
+                <td class="num">CCJ</td>
+                <td class="num">Blue-chip, vertically integrated via Westinghouse; McArthur River = highest grade mine.</td>
+              </tr>
+              <tr>
+                <td>Tier 1 — Large-Cap Miners</td>
+                <td>Kazatomprom</td>
+                <td class="num">KAP</td>
+                <td class="num">#1 producer, London-listed, Kazakhstan risk.</td>
+              </tr>
+              <tr class="highlight">
+                <td>Tier 2 — Developers</td>
+                <td>NexGen Energy</td>
+                <td class="num">NXE</td>
+                <td class="num">Rook I, Athabasca Basin, massive high-grade.</td>
+              </tr>
+              <tr>
+                <td>Tier 2 — Developers</td>
+                <td>Denison Mines</td>
+                <td class="num">DNN</td>
+                <td class="num">Phoenix + Gryphon deposits.</td>
+              </tr>
+              <tr>
+                <td>Tier 2 — Developers</td>
+                <td>Uranium Energy Corp</td>
+                <td class="num">UEC</td>
+                <td class="num">US-focused <a class="jargon" href="#jargon-isr">ISR</a>, “buy American” beneficiary.</td>
+              </tr>
+              <tr>
+                <td>Tier 2 — Developers</td>
+                <td>Energy Fuels</td>
+                <td class="num">UUUU</td>
+                <td class="num">U.S. producer + rare earths.</td>
+              </tr>
+              <tr class="highlight">
+                <td>Tier 3 — Physical / ETFs</td>
+                <td>Sprott Physical Uranium Trust</td>
+                <td class="num">SRUUF</td>
+                <td class="num">Holds real yellowcake; spot price exposure.</td>
+              </tr>
+              <tr>
+                <td>Tier 3 — Physical / ETFs</td>
+                <td>Global X Uranium ETF</td>
+                <td class="num">URA</td>
+                <td class="num">Diversified uranium equities basket.</td>
+              </tr>
+              <tr>
+                <td>Tier 3 — Physical / ETFs</td>
+                <td>Sprott Uranium Miners ETF</td>
+                <td class="num">URNM</td>
+                <td class="num">Concentrated miners exposure.</td>
+              </tr>
+              <tr class="highlight">
+                <td>Tier 4 — Enrichment & Services</td>
+                <td>Centrus Energy</td>
+                <td class="num">LEU</td>
+                <td class="num">Only U.S.-owned enrichment; <a class="jargon" href="#jargon-haleu">HALEU</a> for SMRs.</td>
+              </tr>
+              <tr>
+                <td>Tier 4 — Enrichment & Services</td>
+                <td>BWX Technologies</td>
+                <td class="num">BWXT</td>
+                <td class="num">Fuel & components for defense + civilian.</td>
+              </tr>
+              <tr class="highlight">
+                <td>Tier 5 — Nuclear Utilities</td>
+                <td>Constellation Energy</td>
+                <td class="num">CEG</td>
+                <td class="num">Largest U.S. nuclear fleet; Microsoft deal.</td>
+              </tr>
+              <tr>
+                <td>Tier 5 — Nuclear Utilities</td>
+                <td>Vistra</td>
+                <td class="num">VST</td>
+                <td class="num">Nuclear + gas; Meta PPAs.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="risks">
+        <h2>⚠️ Risks & Bear Case</h2>
+        <div class="card">
+          <div class="list">
+            <div><strong>Regulatory delays:</strong> NRC permitting still slow despite reforms.</div>
+            <div><strong>Accident risk:</strong> any nuclear incident could swing public sentiment and policy.</div>
+            <div><strong>Supply reversal:</strong> Kazatomprom could reverse production cuts.</div>
+            <div><strong>Technology disruption:</strong> laser enrichment could compress margins.</div>
+            <div><strong>Recession risk:</strong> power demand slows if AI CapEx pauses.</div>
+            <div><strong>SMR slippage:</strong> delays or cost overruns in new reactor programs.</div>
+            <div><strong>Political risk:</strong> mining jurisdictions face sanction or expropriation risk.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="related-context">
+        <h2>🔗 Related Context</h2>
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <a href="../ai-value-chain/layer6-energy-datacenters.html" style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--surface-alt);border-radius:12px;border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+            <span style="font-size:24px;">⚡</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">Layer 6 — Energy & Data Centers</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">The broader energy infrastructure powering AI.</div>
+            </div>
+            <span style="margin-left:auto;color:var(--text-dim);font-size:14px;">→</span>
+          </a>
+          <a href="../ai-value-chain/layer5-systems-networking.html" style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--surface-alt);border-radius:12px;border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+            <span style="font-size:24px;">🖧</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">Layer 5 — Systems & Networking</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">GPU clusters that drive the power surge.</div>
+            </div>
+            <span style="margin-left:auto;color:var(--text-dim);font-size:14px;">→</span>
+          </a>
+          <a href="../ai-value-chain/hbm-memory-layer.html" style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:var(--surface-alt);border-radius:12px;border:1px solid var(--border);text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateX(4px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform='none'">
+            <span style="font-size:24px;">💾</span>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">Layer 4 — HBM & Memory</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">AI compute demand that pulls on energy demand.</div>
+            </div>
+            <span style="margin-left:auto;color:var(--text-dim);font-size:14px;">→</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section" id="jargon">
+        <h2>📖 Key Jargon Decoder</h2>
+        <div class="card">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div id="jargon-yellowcake" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Yellowcake</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Concentrated uranium oxide powder produced after milling.</div>
+            </div>
+            <div id="jargon-u3o8" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">U₃O₈</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Triuranium octoxide — the stable oxide form of uranium in yellowcake.</div>
+            </div>
+            <div id="jargon-uf6" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">UF₆ (Uranium Hexafluoride)</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Gas used in enrichment; solid at room temperature.</div>
+            </div>
+            <div id="jargon-leu" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">LEU</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Low-enriched uranium (3–5% U-235) used in most reactors.</div>
+            </div>
+            <div id="jargon-haleu" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">HALEU</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">High-assay low-enriched uranium (5–20% U-235) used for SMRs.</div>
+            </div>
+            <div id="jargon-isr" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">ISR (In-Situ Recovery)</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Mining method using solution mining to dissolve uranium underground.</div>
+            </div>
+            <div id="jargon-smr" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">SMR (Small Modular Reactor)</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Smaller, factory-built nuclear reactors designed for faster deployment.</div>
+            </div>
+            <div id="jargon-ppa" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">PPA (Power Purchase Agreement)</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Long-term contract to buy electricity, often used by hyperscalers.</div>
+            </div>
+            <div id="jargon-baseload" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Baseload Power</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Always-on power supply needed for 24/7 demand.</div>
+            </div>
+            <div id="jargon-enrichment" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Enrichment</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Process of increasing U-235 concentration using centrifuges.</div>
+            </div>
+            <div id="jargon-conversion" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Conversion</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Turning U₃O₈ into UF₆ gas for enrichment.</div>
+            </div>
+            <div id="jargon-fuel-fab" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Fuel Fabrication</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Manufacturing fuel pellets and assemblies for reactors.</div>
+            </div>
+            <div id="jargon-swu" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">SWU (Separative Work Units)</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Measure of enrichment effort required to increase U-235 concentration.</div>
+            </div>
+            <div id="jargon-tails" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Tails Assay</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">U-235 concentration left in depleted uranium after enrichment.</div>
+            </div>
+            <div id="jargon-cftc" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">CFTC</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">U.S. regulator overseeing commodity futures markets.</div>
+            </div>
+            <div id="jargon-spot-term" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Spot vs Term Contracts</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Spot is immediate purchase; term is long-term contracted supply.</div>
+            </div>
+            <div id="jargon-book-bill" class="jargon-def" style="padding:10px;background:var(--surface-alt);border-radius:10px;">
+              <strong style="color:var(--accent);">Book-to-Bill Ratio</strong>
+              <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Orders received divided by orders shipped; leading demand indicator.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">Built by Robin 🐱 • Last updated Feb 4, 2026</div>
+      <p style="font-size:11px;color:var(--text-dimmer);margin-top:16px;">Sources: McKinsey, Goldman Sachs, Sprott, Cameco, World Nuclear Association (as of Feb 4, 2026). This is research, not financial advice.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.addEventListener('DOMContentLoaded', () => {
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    });
+  }
+})();
+
+function slugifyHeading(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function initSectionNav() {
+  const navLinks = document.getElementById('section-nav-links');
+  if (!navLinks) return;
+
+  let headings = Array.from(document.querySelectorAll('.section h2'));
+  if (!headings.length) {
+    headings = Array.from(document.querySelectorAll('h2'));
+  }
+  if (!headings.length) return;
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      heading.id = slugifyHeading(heading.textContent || '');
+    }
+  });
+
+  navLinks.innerHTML = '';
+  headings.forEach((heading) => {
+    const link = document.createElement('a');
+    link.className = 'section-link';
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent || '';
+    navLinks.appendChild(link);
+  });
+
+  const linkMap = new Map();
+  navLinks.querySelectorAll('a').forEach((link) => {
+    const targetId = link.getAttribute('href').slice(1);
+    linkMap.set(targetId, link);
+    link.addEventListener('click', () => setActive(targetId));
+  });
+
+  function setActive(id) {
+    linkMap.forEach((link) => {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    });
+    const activeLink = linkMap.get(id);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      activeLink.setAttribute('aria-current', 'true');
+    }
+  }
+
+  setActive(headings[0].id);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initSectionNav();
+});
+</script>
+</body>
+</html>
