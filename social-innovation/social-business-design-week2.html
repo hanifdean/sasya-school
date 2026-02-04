@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scaling Social Enterprises</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-alt: #1a1a2e;
+    --surface-hover: #1e1e2a;
+    --border: #1e1e2e;
+    --border-alt: #2a2a4a;
+    --text: #e8e8ed;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --accent: #5ec4b6;
+    --accent-glow: rgba(94, 196, 182, 0.12);
+    --green: #34d399;
+    --green-glow: rgba(52, 211, 153, 0.12);
+    --red: #ef4444;
+    --red-glow: rgba(239, 68, 68, 0.12);
+    --orange: #f59e0b;
+    --orange-glow: rgba(245, 158, 11, 0.12);
+    --highlight: #fbbf24;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --accent: #1a8a7d;
+    --accent-glow: rgba(26, 138, 125, 0.06);
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.08);
+    --red: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.08);
+    --orange: #d97706;
+    --orange-glow: rgba(217, 119, 6, 0.08);
+    --highlight: #b45309;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 800px; margin: 0 auto; padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none; border: 1.5px solid var(--border-alt); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero { text-align: center; margin: 2rem 0 3rem; animation: fadeUp 0.6s ease-out; }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-glow); padding: 6px 14px;
+    border-radius: 6px; margin-bottom: 16px; font-weight: 700;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .hero .subtitle { color: var(--text-muted); font-size: 14px; }
+
+  .section { margin-bottom: 2.5rem; animation: fadeUp 0.6s ease-out; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: var(--accent);
+    margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .section h3 { font-size: 15px; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+  .section p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 1rem;
+  }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 0.5rem; }
+  .card p { margin-bottom: 0.4rem; }
+
+  .highlight-box {
+    background: var(--accent-glow); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .highlight-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .highlight-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0;
+  }
+  th, td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 700; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  td { color: var(--text-secondary); }
+
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin: 1rem 0;
+  }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem; text-align: center;
+  }
+  .metric .value { font-size: 20px; font-weight: 800; color: var(--accent); }
+  .metric .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .timeline { margin: 1rem 0; }
+  .timeline-item {
+    display: flex; gap: 1rem; padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-year { font-weight: 700; color: var(--accent); min-width: 60px; font-size: 13px; }
+  .timeline-desc { font-size: 13px; color: var(--text-secondary); }
+
+  .footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; color: var(--text-dim);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  .page-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .content { flex: 1; min-width: 0; }
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface-hover);
+  }
+  .section-nav a.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-glow) inset;
+  }
+  .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .top-bar { max-width: 100%; padding-bottom: 12px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links {
+      flex-direction: row;
+      gap: 8px;
+    }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .section-nav a.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .section { animation: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+</div>
+
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+<div class="container">
+  <a href="social-business-design-week1.html" class="back-link">← Week 1</a>
+
+  <div class="hero">
+    <span class="tag">Social Business Design — Week 2</span>
+    <h1>📈 Scaling Social Enterprises</h1>
+    <p class="subtitle">Frameworks for when and how to scale, the 5Rs readiness model, speed factors, and the cautionary tale of One Laptop Per Child.</p>
+  </div>
+
+  <div class="section">
+    <h2>1. Recap — Why Scaling Matters</h2>
+    <p>Social enterprises exist to address institutional voids and market failures, but they face the unique hybridity challenges discussed in Week 1.</p>
+    <p>The course now shifts from <strong>what social enterprises are</strong> to <strong>how they scale impact sustainably</strong>—without eroding mission or resilience.</p>
+
+    <div class="highlight-box">
+      <div class="label">Strategy Definition</div>
+      <p>To overcome these challenges, social enterprises must employ strategies — purposeful efforts to guide, steer, manage and control individual actors to achieve greater impact in a financially sustainable way.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>2. The Scaling Inhibitors Framework</h2>
+    <p><strong>Key principle:</strong> separate signal from noise — differentiate between <em>tame</em> problems, <em>wicked</em> problems, and <em>table-stakes</em> issues.</p>
+
+    <div class="card">
+      <div class="card-title">The categories of inhibitors</div>
+      <p>Scaling friction appears across market demand, finance, ecosystem constraints, impact measurement, product fit, leadership cognition, competitive strategy, and internal operations.</p>
+    </div>
+
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">External (Beyond Your Control)</div>
+        <p><strong>Demand side / Affordability (Customer):</strong> limited willingness or ability to pay.</p>
+        <p><strong>Attracting Finance (Financial):</strong> capital misalignment, scarcity, donor dependence.</p>
+        <p><strong>Ecosystem challenges (External/Macro):</strong> macro-economy, infrastructure gaps, formal institutions (judiciary), informal institutions (norms, culture).</p>
+        <p><strong>Impact Measurement (Social Good):</strong> weak or costly evidence systems.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Internal (Within Your Control)</div>
+        <p><strong>Value Proposition fit (Product/Service):</strong> weak problem-solution-market match.</p>
+        <p><strong>Managerial (Cognition &amp; Decision Making):</strong> biases, scarcity mindset, path dependence, overspecialising, unprepared skills.</p>
+        <p><strong>Competitiveness (Strategic):</strong> market size, USP clarity, competitive threats.</p>
+        <p><strong>Internal (Operational):</strong> staffing bottlenecks, process gaps, supply chain friction, customer experience breakdowns.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>3. Four Probes for Scaling Assessment</h2>
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">1. Internal Alignment</div>
+        <p>What elements of the internal running collectively inhibit scaling?</p>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Effective Scaling Planning &amp; Execution</div>
+        <p>Is the leadership/team capable of effecting scaling?</p>
+      </div>
+      <div class="card">
+        <div class="card-title">3. Competitive Sustainability</div>
+        <p>Is the change directionally sound to make us competitive long-term?</p>
+      </div>
+      <div class="card">
+        <div class="card-title">4. Positive Impact</div>
+        <p>Will the organization become less engaged with impact through scaling?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>4. The 5Rs Model — Should You Scale?</h2>
+    <table>
+      <tr><th>R</th><th>Definition</th><th>What it means in practice</th></tr>
+      <tr>
+        <td><strong>Readiness</strong></td>
+        <td>Internal preparedness — right structures, systems, leadership.</td>
+        <td>Operational/organizational stability is crucial before scaling.</td>
+      </tr>
+      <tr>
+        <td><strong>Receptivity</strong></td>
+        <td>External environment's openness — cultural, political, institutional factors.</td>
+        <td>Assess if the new market/region can absorb the model.</td>
+      </tr>
+      <tr>
+        <td><strong>Resources</strong></td>
+        <td>Adequate financial, human, and technological resources.</td>
+        <td>Maintain quality and impact during growth.</td>
+      </tr>
+      <tr>
+        <td><strong>Risks</strong></td>
+        <td>Operational risks, market uncertainties, policy changes.</td>
+        <td>Understand downside scenarios that could derail growth.</td>
+      </tr>
+      <tr>
+        <td><strong>Returns</strong></td>
+        <td>Potential social and financial returns.</td>
+        <td>Will scaling lead to meaningful impact, sustainability, or strategic benefit?</td>
+      </tr>
+    </table>
+
+    <div class="card">
+      <div class="card-title">Korten (1980) Progression Model</div>
+      <p><strong>CBO cycle:</strong> Effectiveness first → Efficiency → Then Expansion. Get good at impact, then get efficient with resources, <em>then</em> scale.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Connection to OLI Framework (Dunning)</div>
+      <p>Scaling internationally requires <strong>Ownership</strong> advantages, <strong>Location</strong> fit, and <strong>Internalization</strong> capability—mirroring the 5Rs through an international lens.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>5. Speed of Scaling Up (Kubzansky 2013)</h2>
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">1. Supply Push vs Demand Pull</div>
+        <p>Demand pull = easier and faster diffusion.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Maturity of Innovation</div>
+        <p>Less mature innovations are costlier and scale slower.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">3. Marketing Channels</div>
+        <p>Existing channels = faster; new channels = slower.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">4. Urban vs Rural Context</div>
+        <p>Urban density drives faster diffusion and adoption.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>6. 📖 OLPC Case Study — Vision vs. Reality</h2>
+
+    <h3>The Vision</h3>
+    <div class="card">
+      <p><strong>2005:</strong> Nicholas Negroponte (MIT professor) launches One Laptop Per Child (OLPC).</p>
+      <p><strong>Model:</strong> zero-dividend social enterprise.</p>
+      <p><strong>Product:</strong> XO laptops — rugged, simple, educational software + programming tools, designed for resource-scarce environments.</p>
+      <p><strong>Tagline:</strong> “a laptop for every child.”</p>
+      <p><strong>Core belief:</strong> access to technology → autonomous learning → better future.</p>
+      <p><strong>Born global:</strong> Peru, Uruguay, Rwanda signed intents to purchase millions.</p>
+      <p><strong>Revenue model:</strong> donor-funded development costs + laptop sales revenue.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <span class="timeline-year">2005</span>
+        <span class="timeline-desc">OLPC launched by Negroponte; bold $100 laptop promise.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2007</span>
+        <span class="timeline-desc">XO prototype rollout; early government purchase commitments.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2009</span>
+        <span class="timeline-desc">Millions distributed, but learning outcomes lag behind expectations.</span>
+      </div>
+      <div class="timeline-item">
+        <span class="timeline-year">2012+</span>
+        <span class="timeline-desc">Low-cost tablets and smartphones begin to dominate the market.</span>
+      </div>
+    </div>
+
+    <h3>What Went Wrong — The 7 Failures</h3>
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">1. Cost Overrun 💰</div>
+        <p>Promised $100/laptop, delivered at ~$200. Strained government budgets and raised sustainability doubts.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Supplier Lock-in 🔒</div>
+        <p>Signed 3-year exclusive deals for "corporate discounts". Couldn’t shift to cheaper components—classic path dependence.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">3. Infrastructure Gaps ⚡</div>
+        <p>Many communities lacked electricity and internet. Devices became "glorified toys" without full functionality.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">4. Teacher Underestimation 👩‍🏫</div>
+        <p>Assumed autonomous child-led learning, but teachers were essential and undertrained. Devices underused or misused.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">5. Content Mismatch 📚</div>
+        <p>No localized curriculum-aligned content. Laptops seen as add-ons, not integrated into formal schooling.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">6. Sustainability &amp; Maintenance 🔧</div>
+        <p>No repair capacity, no update roadmap, no end-of-life strategy. Broken devices piled up.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">7. Competitive Blindspot 📱</div>
+        <p>Ignored rise of low-cost tablets and smartphones (e.g., Amazon Fire) that quickly undercut OLPC’s advantage.</p>
+      </div>
+    </div>
+
+    <h3>Where It Worked</h3>
+    <div class="card">
+      <p><strong>Uruguay:</strong> government integrated laptops into education, trained teachers, and ensured classroom use.</p>
+      <p>Some children gained first-ever technology access, sparking creativity and curiosity.</p>
+      <p>But successes were inconsistent and depended on local context and institutional support.</p>
+    </div>
+
+    <h3>The Verdict</h3>
+    <div class="highlight-box">
+      <div class="label">Outcome</div>
+      <p>By 2009, millions were distributed but educational transformation had not materialized at promised scale. <strong>“Lofty goals clashed with the complex realities of the environments in which it operated.”</strong></p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>7. Connecting OLPC to Course Frameworks</h2>
+    <table>
+      <tr><th>Framework</th><th>OLPC Connection</th></tr>
+      <tr>
+        <td><strong>Zahra Typology</strong></td>
+        <td>OLPC = Social Engineer (revolutionary systemic change) but lacked local embeddedness of a bricoleur.</td>
+      </tr>
+      <tr>
+        <td><strong>Institutional Voids</strong></td>
+        <td>Underestimated informal voids — cultural norms around learning and classroom authority.</td>
+      </tr>
+      <tr>
+        <td><strong>Hybridity Challenge</strong></td>
+        <td>Leaned too far toward scale/financial model, neglected social side (teacher training, local content).</td>
+      </tr>
+      <tr>
+        <td><strong>5Rs Assessment</strong></td>
+        <td>Failed Readiness (no teacher training), Receptivity (cultural mismatch), Resources (missing infrastructure).</td>
+      </tr>
+      <tr>
+        <td><strong>Path Dependence</strong></td>
+        <td>3-year supplier deal = textbook example of past decisions restricting future flexibility.</td>
+      </tr>
+      <tr>
+        <td><strong>Scaling Inhibitors</strong></td>
+        <td>Hit almost every category: affordability, infrastructure, managerial blindspots, competitive threats.</td>
+      </tr>
+    </table>
+
+    <div class="highlight-box">
+      <div class="label">Cautionary Tale</div>
+      <p>OLPC is the cautionary tale of what happens when a social enterprise prioritizes rapid global scale over local context, embeddedness, and the fundamentals of readiness.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>8. Key Lessons for Scaling SEs</h2>
+    <div class="card">
+      <p><strong>Scale is not inherently good</strong> — readiness matters more than speed.</p>
+      <p><strong>Local context is non-negotiable</strong> — what works in Uruguay won’t work everywhere.</p>
+      <p><strong>Path dependence is real</strong> — early decisions lock you in.</p>
+      <p><strong>The 5Rs must be assessed honestly</strong> before scaling.</p>
+      <p><strong>Korten’s progression holds:</strong> get effective, get efficient, then expand.</p>
+      <p><strong>Technology is a tool, not a solution</strong> — without ecosystem support, it fails.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>9. Key References</h2>
+    <div class="card">
+      <p>Kubzansky (2013) — speed of scaling</p>
+      <p>Korten (1980) — effectiveness → efficiency → expansion</p>
+      <p>Dunning — OLI framework</p>
+      <p>OLPC adapted case (2009)</p>
+      <p>Zahra</p>
+      <p>Mair &amp; Martí (2006)</p>
+      <p>Estrin et al. (2013)</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Social Innovation &amp; Design — Study Hub · Built with 🐱 by Robin
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('theme-icon').textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+function slugifyHeading(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function initSectionNav() {
+  const navLinks = document.getElementById('section-nav-links');
+  if (!navLinks) return;
+
+  let headings = Array.from(document.querySelectorAll('.section h2'));
+  if (!headings.length) {
+    headings = Array.from(document.querySelectorAll('.section-title, h2'));
+  }
+  if (!headings.length) return;
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      heading.id = slugifyHeading(heading.textContent || '');
+    }
+  });
+
+  navLinks.innerHTML = '';
+  headings.forEach((heading) => {
+    const link = document.createElement('a');
+    link.className = 'section-link';
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent || '';
+    navLinks.appendChild(link);
+  });
+
+  const linkMap = new Map();
+  navLinks.querySelectorAll('a').forEach((link) => {
+    const targetId = link.getAttribute('href').slice(1);
+    linkMap.set(targetId, link);
+    link.addEventListener('click', () => setActive(targetId));
+  });
+
+  function setActive(id) {
+    linkMap.forEach((link) => {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    });
+    const activeLink = linkMap.get(id);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      activeLink.setAttribute('aria-current', 'true');
+    }
+  }
+
+  setActive(headings[0].id);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initSectionNav();
+});
+
+</script>
+</body>
+</html>
