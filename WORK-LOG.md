@@ -6,3 +6,7 @@
 
 ## 2026-02-03 10:50:00
 - Added Related Context sections to company deep dives and Companies in This Layer sections to AI value chain pages.
+
+## 2026-02-04 09:40:00
+- Drafted PRD for MEDC and EMAS company deep dives.
+- Built MEDC and EMAS deep dive pages with thesis, metrics, segments, catalysts, risks, jargon, and source credits.
