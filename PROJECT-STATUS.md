@@ -6,6 +6,7 @@
 - Added Polymarket page entry to `index.html`.
 - Added cross-navigation sections linking company deep dives with AI value chain pages.
 - Added PRD and completed MEDC + EMAS company deep dive pages.
+- Replaced tag filter pills with a multi-select dropdown and tag chips in `index.html`.
 
 ## Next
 - Perform visual self-review of the new page (desktop + mobile) and update TODO.

@@ -10,3 +10,6 @@
 ## 2026-02-04 09:40:00
 - Drafted PRD for MEDC and EMAS company deep dives.
 - Built MEDC and EMAS deep dive pages with thesis, metrics, segments, catalysts, risks, jargon, and source credits.
+
+## 2026-02-05 08:55:00
+- Replaced tag pill filters with a multi-select dropdown, unread toggle, and removable tag chips in `index.html`.
