@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community Economies & Systems of Exchange</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-alt: #1a1a2e;
+    --surface-hover: #1e1e2a;
+    --border: #1e1e2e;
+    --border-alt: #2a2a4a;
+    --text: #e8e8ed;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --accent: #5ec4b6;
+    --accent-glow: rgba(94, 196, 182, 0.12);
+    --green: #34d399;
+    --green-glow: rgba(52, 211, 153, 0.12);
+    --red: #ef4444;
+    --red-glow: rgba(239, 68, 68, 0.12);
+    --orange: #f59e0b;
+    --orange-glow: rgba(245, 158, 11, 0.12);
+    --purple: #a78bfa;
+    --purple-glow: rgba(167, 139, 250, 0.12);
+    --highlight: #fbbf24;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --accent: #1a8a7d;
+    --accent-glow: rgba(26, 138, 125, 0.06);
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.08);
+    --red: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.08);
+    --orange: #d97706;
+    --orange-glow: rgba(217, 119, 6, 0.08);
+    --purple: #7c3aed;
+    --purple-glow: rgba(124, 58, 237, 0.08);
+    --highlight: #b45309;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 800px; margin: 0 auto; padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none; border: 1.5px solid var(--border-alt); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero { text-align: center; margin: 2rem 0 3rem; animation: fadeUp 0.6s ease-out; }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-glow); padding: 6px 14px;
+    border-radius: 6px; margin-bottom: 16px; font-weight: 700;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .hero .subtitle { color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto; }
+
+  .section { margin-bottom: 2.5rem; animation: fadeUp 0.6s ease-out; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: var(--accent);
+    margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .section h3 { font-size: 15px; font-weight: 700; margin: 1.25rem 0 0.5rem; color: var(--text); }
+  .section p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; }
+  .section ul { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-left: 1.25rem; margin-bottom: 0.75rem; }
+  .section li { margin-bottom: 0.5rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 1rem;
+  }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 0.5rem; }
+  .card p { margin-bottom: 0.4rem; }
+
+  .highlight-box {
+    background: var(--accent-glow); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .highlight-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .highlight-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  .warning-box {
+    background: var(--orange-glow); border: 1px solid var(--orange);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .warning-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--orange); margin-bottom: 0.5rem; }
+  .warning-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  .insight-box {
+    background: var(--purple-glow); border: 1px solid var(--purple);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .insight-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--purple); margin-bottom: 0.5rem; }
+  .insight-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0;
+  }
+  th, td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 700; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  td { color: var(--text-secondary); }
+
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem; margin: 1rem 0;
+  }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem; text-align: center;
+  }
+  .metric .value { font-size: 20px; font-weight: 800; color: var(--accent); }
+  .metric .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .reading-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 1rem;
+  }
+  .reading-card .source { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .reading-card .title { font-size: 16px; font-weight: 700; margin-bottom: 0.25rem; }
+  .reading-card .authors { font-size: 13px; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .reading-card .desc { font-size: 13px; color: var(--text-secondary); }
+
+  .comparison-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin: 1rem 0;
+  }
+  @media (max-width: 600px) {
+    .comparison-grid { grid-template-columns: 1fr; }
+  }
+
+  .footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; color: var(--text-dim);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  .page-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .content { flex: 1; min-width: 0; }
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface-hover);
+  }
+  .section-nav a.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .top-bar { max-width: 100%; padding-bottom: 12px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      z-index: 10;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links {
+      flex-direction: row;
+      gap: 8px;
+    }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+</div>
+
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+<div class="container">
+  <a href="who-pays-overview.html" class="back-link" style="margin-bottom: 1rem; display: inline-block;">← Week 3: Who Pays?</a>
+
+  <div class="hero">
+    <span class="tag">Social Innovation Design — Week 3 Readings</span>
+    <h1>🌍 Community Economies & Systems of Exchange</h1>
+    <p class="subtitle">Understanding how different societies organize economic exchange beyond the "free market" — and why indigenous, informal, and solidarity economies matter for social innovation.</p>
+  </div>
+
+  <!-- READINGS OVERVIEW -->
+  <div class="section" id="readings">
+    <h2>📚 The Readings</h2>
+    
+    <div class="reading-card">
+      <div class="source">Academy of Management Review, 2004</div>
+      <div class="title">Systems of Exchange</div>
+      <div class="authors">Nicole Woolsey Biggart & Rick Delbridge</div>
+      <div class="desc">Develops a classification of exchange systems using network analysis, economics, and cultural sociology. Argues that the "free market" is just one possible economy—other types aren't "imperfections" but qualitatively different systems.</div>
+    </div>
+
+    <div class="reading-card">
+      <div class="source">Oxford University Press, 2022</div>
+      <div class="title">Community Economies in the Global South (Conclusion)</div>
+      <div class="authors">Caroline Shenaz Hossein & Mary Njeri Kinyanjui</div>
+      <div class="desc">Examines ROSCAs (Rotating Savings and Credit Associations) and informal cooperatives as legitimate business forms. Argues that Global South communities have been practicing community economies long before Western development frameworks.</div>
+    </div>
+  </div>
+
+  <!-- READING 1: SYSTEMS OF EXCHANGE -->
+  <div class="section" id="systems-of-exchange">
+    <h2>1. Systems of Exchange (Biggart & Delbridge)</h2>
+    
+    <h3>The Core Argument</h3>
+    <p>Traditional economics treats "the market" as the default—any other form of exchange is seen as an <strong>imperfection</strong> or <strong>friction</strong>. Biggart & Delbridge argue this is wrong: there are <strong>qualitatively different systems of exchange</strong>, each with its own logic, social relations, and outcomes.</p>
+
+    <div class="highlight-box">
+      <div class="label">Key Insight</div>
+      <p>Markets are not natural or universal—they are <strong>culturally constructed</strong> and <strong>socially embedded</strong>. The "free market" is just one type of exchange arena, not the ideal against which all others should be measured.</p>
+    </div>
+
+    <h3>Three Approaches to Understanding Markets</h3>
+    
+    <div class="card">
+      <div class="card-title">1. Economic Approach (Traditional)</div>
+      <p>Markets as <strong>price-setting mechanisms</strong>. Assumes rational actors, complete information, homogeneous commodities. Deviations = "imperfections." Social relations = "friction."</p>
+      <p><em>Limitation:</em> Treats markets as abstract, empirically empty concepts.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Markets as Social Structures</div>
+      <p>Markets are networks of <strong>concrete social relations</strong>. Position in a network affects outcomes. Key theorists: Granovetter (embeddedness), White, Burt, Baker.</p>
+      <p><em>Limitation:</em> Focuses on structure of ties, not content or culture of ties.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Markets as Cultural Arenas</div>
+      <p>Markets as <strong>constructed social worlds</strong> with shared meanings, values, and beliefs. Culture shapes how actors define interests, evaluate options, and legitimate actions.</p>
+      <p>Key insight: "Categories of economic action are culturally variable and socially constructed."</p>
+    </div>
+
+    <h3>The Classification Framework</h3>
+    <p>Biggart & Delbridge combine <strong>network structure</strong> + <strong>cultural logic</strong> to classify different exchange systems:</p>
+
+    <table>
+      <tr>
+        <th>Dimension</th>
+        <th>What it captures</th>
+      </tr>
+      <tr>
+        <td><strong>Logic of Action</strong></td>
+        <td>What motivates actors? Self-interest? Obligation? Solidarity? Status?</td>
+      </tr>
+      <tr>
+        <td><strong>Structure of Relations</strong></td>
+        <td>How are actors connected? Anonymous? Network-embedded? Hierarchical?</td>
+      </tr>
+    </table>
+
+    <div class="insight-box">
+      <div class="label">Why This Matters for Social Innovation</div>
+      <p>If you're designing a social enterprise, you need to understand <strong>what kind of exchange system</strong> you're operating in (or creating). Imposing a "market" logic where solidarity or reciprocity governs will fail—and vice versa.</p>
+    </div>
+  </div>
+
+  <!-- READING 2: COMMUNITY ECONOMIES -->
+  <div class="section" id="community-economies">
+    <h2>2. Community Economies in the Global South (Hossein & Kinyanjui)</h2>
+    
+    <h3>The Core Argument</h3>
+    <p>Western development institutions have historically dismissed informal, indigenous economies as "primitive" or "undeveloped." This reading argues the opposite: <strong>community economies are sophisticated, sustainable, and legitimate</strong>—and the Global South has been doing them for centuries.</p>
+
+    <div class="warning-box">
+      <div class="label">The Problem with Western Development</div>
+      <p>Structural Adjustment Programs (SAPs) and "modernization" projects imposed free-market orthodoxy on the Global South, ignoring existing community-based systems. The binary of <strong>capitalism vs. communism</strong> left no room for indigenous alternatives.</p>
+    </div>
+
+    <h3>What Are Community Economies?</h3>
+    <p>Economic activities rooted in <strong>self-reliance, solidarity, and collective action</strong>. They prioritize equity and social bonds over individual profit maximization.</p>
+
+    <div class="card">
+      <div class="card-title">ROSCAs (Rotating Savings & Credit Associations)</div>
+      <p>Groups where members contribute regularly and take turns receiving the pooled funds. Known by many names:</p>
+      <ul>
+        <li><strong>Indonesia:</strong> Arisan</li>
+        <li><strong>Nigeria:</strong> Esusu</li>
+        <li><strong>Kenya:</strong> Chama</li>
+        <li><strong>Caribbean:</strong> Sou-sou, Partner</li>
+        <li><strong>West Africa (Francophone):</strong> Tontines</li>
+      </ul>
+      <p>ROSCAs are primarily organized by <strong>women</strong> and serve both financial and social functions.</p>
+    </div>
+
+    <h3>Key Themes</h3>
+
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">🏛️ Colonial Legacy</div>
+        <p>Western epistemologies dominated discourse, labeling Global South practices as "inept" and "primitive." This narrative justified extraction and paternalistic development.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🌱 Indigenous Knowledge</div>
+        <p>Philosophies like <strong>Ubuntu</strong> (Southern Africa), <strong>Ujamaa</strong> (Tanzania), and <strong>Kombit</strong> (Haiti) offer frameworks for cooperation that predate Western economics.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">👩 Feminist Economics</div>
+        <p>Gibson-Graham's "diverse economies" framework recognizes that most economic activity happens <strong>outside</strong> formal capitalism—in households, communities, and informal networks, often led by women.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🏆 Nobel Recognition</div>
+        <p>Elinor Ostrom won the Nobel Prize (2009) for showing that communities can sustainably manage common resources—contrary to the "tragedy of the commons" narrative.</p>
+      </div>
+    </div>
+
+    <h3>The Indonesia Case: Arisan</h3>
+    <p>The reading highlights research by <strong>Ririn Haryani & Kelly Dombroski</strong> on arisan in Indonesia:</p>
+
+    <div class="card">
+      <div class="card-title">Arisan: More Than Savings</div>
+      <ul>
+        <li><strong>100+ years</strong> of practice in Indonesia</li>
+        <li>Combines <strong>financial function</strong> (rotating credit) with <strong>social function</strong> (regular gatherings, care networks)</li>
+        <li>Reflects <strong>gotong royong</strong> (mutual assistance) values</li>
+        <li>Used by government for socialization programs (health, sanitation)</li>
+        <li>Members challenge "rational economic man" by operating collectively, not through self-interest</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <div class="label">Arisan & Policy Influence</div>
+      <p>The authors note that arisan users were able to <strong>influence OJK (Indonesian Financial Services Authority)</strong> to issue regulations on financial inclusion. This represents grassroots influence on formal policy—community practices shaping what "financial inclusion" means.</p>
+    </div>
+
+    <h3>Critique of INGOs</h3>
+    <p>The reading is critical of how international NGOs have co-opted indigenous practices:</p>
+
+    <div class="warning-box">
+      <div class="label">The INGO Problem</div>
+      <p>Organizations like CARE receive millions to "teach" Village Savings & Loans (VSL) programs—essentially <strong>rebranding</strong> what African women have done for centuries. Western consultants profit from indigenous knowledge without crediting or compensating local communities.</p>
+    </div>
+  </div>
+
+  <!-- SYNTHESIS -->
+  <div class="section" id="synthesis">
+    <h2>3. Connecting the Two Readings</h2>
+
+    <p>Both readings challenge the assumption that the "free market" is the natural or best form of economic organization:</p>
+
+    <div class="comparison-grid">
+      <div class="card">
+        <div class="card-title">Biggart & Delbridge</div>
+        <p>Academic/theoretical approach. Shows that exchange systems vary by <strong>logic of action</strong> and <strong>structure of relations</strong>. Markets are culturally constructed.</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Hossein & Kinyanjui</div>
+        <p>Empirical/activist approach. Documents how <strong>community economies</strong> in the Global South embody alternative logics—solidarity, reciprocity, collective care.</p>
+      </div>
+    </div>
+
+    <h3>Implications for Social Innovation</h3>
+
+    <div class="card">
+      <div class="card-title">1. Know Your Exchange System</div>
+      <p>Before designing a social enterprise, understand what exchange logic already exists. Imposing market logic on a solidarity-based community (or vice versa) will create friction.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2. Value Indigenous Knowledge</div>
+      <p>Don't reinvent the wheel. Community economies have solved problems for centuries. Partner with, learn from, and credit local knowledge rather than extracting it.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3. Question "Scaling" Assumptions</div>
+      <p>Western scaling models assume growth = good. Community economies prioritize <strong>sustainability, equity, and social cohesion</strong> over scale. What if staying small is the right strategy?</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4. Recognize Multiple Payors</div>
+      <p>In community economies, "who pays" isn't just financial. Social obligations, reciprocity, and collective contribution are forms of payment. This connects to Week 3's "Who Pays?" theme.</p>
+    </div>
+  </div>
+
+  <!-- KEY CONCEPTS -->
+  <div class="section" id="key-concepts">
+    <h2>4. Key Concepts Glossary</h2>
+
+    <table>
+      <tr>
+        <th>Term</th>
+        <th>Definition</th>
+      </tr>
+      <tr>
+        <td><strong>Embeddedness</strong></td>
+        <td>Economic action is embedded in social relations, not separate from them (Granovetter/Polanyi)</td>
+      </tr>
+      <tr>
+        <td><strong>ROSCA</strong></td>
+        <td>Rotating Savings & Credit Association—members pool funds and take turns receiving the pot</td>
+      </tr>
+      <tr>
+        <td><strong>Gotong Royong</strong></td>
+        <td>Indonesian concept of mutual assistance and collective responsibility</td>
+      </tr>
+      <tr>
+        <td><strong>Ubuntu</strong></td>
+        <td>"I am because we are"—Southern African philosophy of interconnected humanity</td>
+      </tr>
+      <tr>
+        <td><strong>Diverse Economies</strong></td>
+        <td>Gibson-Graham's framework recognizing economic activity beyond formal capitalism</td>
+      </tr>
+      <tr>
+        <td><strong>Structural Adjustment</strong></td>
+        <td>IMF/World Bank programs that imposed free-market policies on developing countries</td>
+      </tr>
+      <tr>
+        <td><strong>Logic of Action</strong></td>
+        <td>What motivates actors—self-interest, obligation, solidarity, status, etc.</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- DISCUSSION QUESTIONS -->
+  <div class="section" id="discussion">
+    <h2>5. Discussion Questions</h2>
+
+    <div class="card">
+      <div class="card-title">For Class Discussion</div>
+      <ol style="font-size: 14px; line-height: 1.8; color: var(--text-secondary); margin-left: 1.25rem;">
+        <li>How would you classify <strong>arisan</strong> using Biggart & Delbridge's framework? What logic of action and structure of relations does it reflect?</li>
+        <li>The readings critique Western development as paternalistic. But is there a role for external support in strengthening community economies? Where's the line?</li>
+        <li>If community economies are so effective, why haven't they "scaled"? Is that even the right question to ask?</li>
+        <li>How might social enterprises <strong>learn from</strong> rather than <strong>replace</strong> existing community economies?</li>
+        <li>The arisan case shows grassroots influence on OJK policy. What conditions enabled this? How can community voices be amplified in other contexts?</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Study Hub — Social Innovation & Design</p>
+    <p style="margin-top: 4px;">Sources: Biggart & Delbridge (2004), Hossein & Kinyanjui (2022), Haryani & Dombroski</p>
+  </div>
+
+</div>
+  </main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const icon = document.getElementById('theme-icon');
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.setAttribute('data-theme', 'light');
+    icon.textContent = '🌙';
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    icon.textContent = '☀️';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-icon').textContent = '☀️';
+  }
+})();
+
+// Section nav highlight
+(function() {
+  const sections = document.querySelectorAll('.section[id]');
+  const navContainer = document.getElementById('section-nav-links');
+  sections.forEach(sec => {
+    const a = document.createElement('a');
+    a.href = '#' + sec.id;
+    const h2 = sec.querySelector('h2');
+    a.textContent = h2 ? h2.textContent.replace(/^\d+\.\s*/, '').replace(/^[^\w]*/, '') : sec.id;
+    navContainer.appendChild(a);
+  });
+  function onScroll() {
+    let current = '';
+    sections.forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= 120) current = sec.id;
+    });
+    navContainer.querySelectorAll('a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>
