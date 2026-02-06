@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scaling Impact & Theory of Change</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface-alt: #1a1a2e;
+    --surface-hover: #1e1e2a;
+    --border: #1e1e2e;
+    --border-alt: #2a2a4a;
+    --text: #e8e8ed;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --accent: #5ec4b6;
+    --accent-glow: rgba(94, 196, 182, 0.12);
+    --green: #34d399;
+    --green-glow: rgba(52, 211, 153, 0.12);
+    --red: #ef4444;
+    --red-glow: rgba(239, 68, 68, 0.12);
+    --orange: #f59e0b;
+    --orange-glow: rgba(245, 158, 11, 0.12);
+    --highlight: #fbbf24;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-alt: #f5f3ef;
+    --surface-hover: #faf8f5;
+    --border: #e5e0d8;
+    --border-alt: #d5d0c8;
+    --text: #2c2a26;
+    --text-secondary: #4a4640;
+    --text-muted: #6b6560;
+    --text-dim: #8a8580;
+    --accent: #1a8a7d;
+    --accent-glow: rgba(26, 138, 125, 0.06);
+    --green: #059669;
+    --green-glow: rgba(5, 150, 105, 0.08);
+    --red: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.08);
+    --orange: #d97706;
+    --orange-glow: rgba(217, 119, 6, 0.08);
+    --highlight: #b45309;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 24px;
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; }
+
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 800px; margin: 0 auto; padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none; border: 1.5px solid var(--border-alt); border-radius: 8px;
+    padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero { text-align: center; margin: 2rem 0 3rem; animation: fadeUp 0.6s ease-out; }
+  .hero .tag {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-glow); padding: 6px 14px;
+    border-radius: 6px; margin-bottom: 16px; font-weight: 700;
+  }
+  .hero h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .hero .subtitle { color: var(--text-muted); font-size: 14px; }
+
+  .nav-links {
+    display: flex; gap: 16px; margin-bottom: 1rem;
+  }
+
+  .section { margin-bottom: 2.5rem; animation: fadeUp 0.6s ease-out; }
+  .section h2 {
+    font-size: 18px; font-weight: 700; color: var(--accent);
+    margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .section h3 { font-size: 15px; font-weight: 700; margin: 1.25rem 0 0.5rem; }
+  .section h4 { font-size: 14px; font-weight: 700; margin: 1rem 0 0.4rem; color: var(--text); }
+  .section p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; }
+  .section ul, .section ol { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; padding-left: 1.5rem; }
+  .section li { margin-bottom: 0.4rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin-bottom: 1rem;
+  }
+  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 0.5rem; }
+  .card p { margin-bottom: 0.4rem; }
+
+  .highlight-box {
+    background: var(--accent-glow); border: 1px solid var(--accent);
+    border-radius: 12px; padding: 1.25rem; margin: 1.5rem 0;
+  }
+  .highlight-box .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 0.5rem; }
+  .highlight-box p { font-size: 14px; line-height: 1.7; color: var(--text); }
+
+  .highlight-box.warning {
+    background: var(--orange-glow); border-color: var(--orange);
+  }
+  .highlight-box.warning .label { color: var(--orange); }
+
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0;
+  }
+  th, td {
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  th { font-weight: 700; color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  td { color: var(--text-secondary); }
+
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin: 1rem 0;
+  }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 1rem; text-align: center;
+  }
+  .metric .value { font-size: 20px; font-weight: 800; color: var(--accent); }
+  .metric .label { font-size: 11px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .timeline { margin: 1rem 0; }
+  .timeline-item {
+    display: flex; gap: 1rem; padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-year { font-weight: 700; color: var(--accent); min-width: 60px; font-size: 13px; }
+  .timeline-desc { font-size: 13px; color: var(--text-secondary); }
+
+  .logic-chain {
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+    gap: 0.5rem; margin: 1.5rem 0; font-size: 14px; font-weight: 600;
+  }
+  .logic-chain .step {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.5rem 1rem;
+  }
+  .logic-chain .arrow { color: var(--accent); font-size: 18px; }
+
+  .template-box {
+    background: var(--surface-alt); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem; margin: 1rem 0; font-family: monospace; font-size: 13px;
+    line-height: 1.8; color: var(--text-secondary);
+  }
+
+  .footer {
+    margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    text-align: center; font-size: 12px; color: var(--text-dim);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  .page-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+  .content { flex: 1; min-width: 0; }
+  .section-nav {
+    position: sticky;
+    top: 96px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    height: fit-content;
+    max-height: calc(100vh - 140px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  .section-nav-title {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .section-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .section-nav a {
+    display: block;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .section-nav a:hover {
+    color: var(--accent);
+    border-color: var(--border);
+    background: var(--surface-hover);
+  }
+  .section-nav a.active {
+    color: var(--accent);
+    background: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-glow) inset;
+  }
+  .section-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 768px) {
+    body { padding: 24px 16px; }
+    .top-bar { max-width: 100%; padding-bottom: 12px; }
+    .page-layout { flex-direction: column; gap: 12px; }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 8px;
+      border-radius: 12px;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    .section-nav-title { display: none; }
+    .section-nav-links {
+      flex-direction: row;
+      gap: 8px;
+    }
+    .section-nav a {
+      white-space: nowrap;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border-color: var(--border);
+      background: var(--surface);
+    }
+    .section-nav a.active {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+    .logic-chain { flex-direction: column; }
+    .logic-chain .arrow { transform: rotate(90deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .section { animation: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+</div>
+
+<div class="page-layout">
+  <nav class="section-nav" aria-label="Section navigation">
+    <div class="section-nav-title">On this page</div>
+    <div class="section-nav-links" id="section-nav-links"></div>
+  </nav>
+  <main class="content">
+<div class="container">
+  <div class="nav-links">
+    <a href="social-business-design-week2.html" class="back-link">← Week 2</a>
+    <a href="social-business-design-week1.html" class="back-link">Week 1</a>
+  </div>
+
+  <div class="hero">
+    <span class="tag">Social Business Design — Week 3</span>
+    <h1>🎯 Scaling Impact & Theory of Change</h1>
+    <p class="subtitle">From measuring social impact to building a provable theory of change — and the challenges of attribution, stakeholders, and standardisation.</p>
+  </div>
+
+  <div class="section">
+    <h2>1. From Scaling Enterprises to Scaling Impact</h2>
+    <p>Week 2 covered how to scale the social enterprise <em>itself</em>—the 5Rs model, speed factors, and the cautionary tale of OLPC. Week 3 shifts focus from scaling the organisation to <strong>scaling IMPACT</strong>.</p>
+    <p>The key question: <strong>how do we know our SE is actually creating social value at scale?</strong></p>
+    <p>This lecture covers three interconnected themes:</p>
+    <ul>
+      <li>How social impact is defined (and why definitions matter)</li>
+      <li>How to measure impact effectively</li>
+      <li>The <strong>Theory of Change</strong> framework as a core tool</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>2. Defining Social Impact</h2>
+    <p>Social impact has <strong>no single agreed definition</strong>—which creates challenges for both research and practice.</p>
+
+    <h3>Multiple definitions from the literature:</h3>
+    <div class="card">
+      <div class="card-title">Broad view</div>
+      <p>Changes to people's way of life, culture, community, political systems, environment, health, well-being, rights, fears, and aspirations.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Centre for Social Impact</div>
+      <p><em>"The net effect of an activity on a community and well-being of individuals and families."</em></p>
+      <p>This emphasises a <strong>long-term, systemic view</strong>—looking at community-level effects, not just individual beneficiaries.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Roche (1999)</div>
+      <p><em>"Significant or lasting changes in people's lives brought about by a given action."</em></p>
+      <p>Key insight: <strong>proportionality matters</strong>—the change must be meaningful relative to someone's life circumstances.</p>
+    </div>
+
+    <h3>Clifford (2014) — Four Key Elements</h3>
+    <table>
+      <tr><th>#</th><th>Element</th><th>Source</th></tr>
+      <tr><td>1</td><td>Value created as <strong>consequence</strong> of someone's activity</td><td>Emerson et al. (2000)</td></tr>
+      <tr><td>2</td><td>Value experienced by beneficiaries <strong>AND all others affected</strong></td><td>Kolodinsky et al. (2006)</td></tr>
+      <tr><td>3</td><td>Includes both <strong>positive and negative</strong> effects</td><td>Wainwright (2002)</td></tr>
+      <tr><td>4</td><td>Judged against a <strong>benchmark/counterfactual</strong></td><td>Clifford (2014)</td></tr>
+    </table>
+
+    <div class="highlight-box">
+      <div class="label">Key Challenge</div>
+      <p><em>"The lack of consensus on the definition of social impact and the best way to measure it hampers both academic debate and practical usage of social impact methods."</em> — Maas and Liket (2011)</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>3. Why Measure Impact?</h2>
+    <p>Impact measurement serves two fundamental purposes:</p>
+
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">🔍 PROVE</div>
+        <p><strong>Establish legitimacy and accountability</strong></p>
+        <p>Demonstrate to stakeholders that real value is being created. Build credibility with funders, governments, and the public.</p>
+        <p class="text-dim" style="font-size: 12px; color: var(--text-dim);">Nicholls (2009)</p>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 IMPROVE</div>
+        <p><strong>Basis for learning and improving efficiency</strong></p>
+        <p>Understand what's working and what isn't. Enable data-driven decisions and continuous improvement.</p>
+        <p class="text-dim" style="font-size: 12px; color: var(--text-dim);">Dees (2007); Paton (2003)</p>
+      </div>
+    </div>
+
+    <h3>Additional Benefits</h3>
+    <ul>
+      <li><strong>Performance assessment & adaptation</strong> — identify growth opportunities, adjust when results don't meet expectations</li>
+      <li><strong>Understanding real change</strong> — see what's actually happening in stakeholders' lives, not just what you hope is happening</li>
+      <li><strong>Identifying unintended consequences</strong> — both positive (amplify them) and negative (mitigate them)</li>
+      <li><strong>Building outcomes-focused culture</strong> — shift from measuring activities/procedures to measuring actual change</li>
+      <li><strong>Stakeholder engagement</strong> — motivates employees, builds trust with beneficiaries and partners</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>4. Starting Point: Founder Intentionality</h2>
+    <p>Impact measurement must begin with what the founder <strong>intended</strong> to achieve. You can only assess performance against the founder's intended priorities and value creation.</p>
+
+    <h3>Founders express intentionality through:</h3>
+
+    <div class="card">
+      <div class="card-title">Purpose</div>
+      <p>Why the organisation exists and whose interests it serves.</p>
+      <p class="text-dim" style="font-size: 12px; color: var(--text-dim);">Edmans (2021)</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">BHAGs — Big Hairy Audacious Goals</div>
+      <p>Vision statements that stretch the organisation beyond what seems possible.</p>
+      <p><strong>Characteristics:</strong></p>
+      <ul>
+        <li>Linked to "strategy as stretch" (Hamel)</li>
+        <li>The "Hubris Factor" — visionary companies have overbearing confidence</li>
+        <li>Clear finish line — should be able to determine when achieved</li>
+        <li>50-70% probability of success — not a sure bet</li>
+      </ul>
+      <p class="text-dim" style="font-size: 12px; color: var(--text-dim);">Collins & Porras</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Mission Statements</div>
+      <p><strong>Formula:</strong> "We [verb] to [target population] to [outcome that can be measured]"</p>
+      <p><strong>Example:</strong> "Providing insect squatters to BOP customers to minimise disease contraction"</p>
+    </div>
+
+    <div class="highlight-box">
+      <div class="label">Visionary Founders</div>
+      <p>Muhammad Yunus (Grameen Bank) and Bill Drayton (Ashoka) exemplify founders whose clear intentionality shaped global movements in social enterprise and social entrepreneurship.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>5. Critical Performance Variables</h2>
+    <p>From intentionality, derive the <strong>CPVs (Critical Performance Variables)</strong> — the most important things to measure that indicate whether you're achieving your mission.</p>
+
+    <h3>Example: Lonely-students.com</h3>
+    <div class="card">
+      <div class="card-title">BHAG</div>
+      <p><em>"Eradicate all student loneliness that challenges mental health in UK universities"</em></p>
+    </div>
+    <div class="card">
+      <div class="card-title">Mission</div>
+      <p><em>"Provide and facilitate virtual and physical opportunities to meet and build community for all lonely students based on their interests in a safe environment"</em></p>
+    </div>
+    <div class="card">
+      <div class="card-title">Critical Performance Variables</div>
+      <ul>
+        <li># students reached</li>
+        <li># connections made</li>
+        <li>Loneliness reduction metrics</li>
+        <li>Mental health improvement indicators</li>
+      </ul>
+    </div>
+
+    <h3>ESG as Impact Framework</h3>
+    <p>Another way to characterise impact is through <strong>ESG buckets</strong>:</p>
+    <div class="metric-grid">
+      <div class="metric">
+        <div class="value">🌍</div>
+        <div class="label">Environment</div>
+      </div>
+      <div class="metric">
+        <div class="value">👥</div>
+        <div class="label">Social</div>
+      </div>
+      <div class="metric">
+        <div class="value">⚖️</div>
+        <div class="label">Governance</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>6. The Complications — Beyond Intentionality</h2>
+    <p>Impact measurement is <strong>NOT</strong> just about founder intentionality. Four major complications make it significantly harder:</p>
+
+    <h3>A. Stakeholder Pressures</h3>
+    <div class="card">
+      <p>Multiple stakeholders have <strong>different motives and metric preferences</strong>.</p>
+      <p><strong>Key insight:</strong> Measures are NOT neutral — they reflect particular points of view.</p>
+      <ul>
+        <li><strong>Funders are the primary drivers</strong> of what gets measured (Moxham, 2010; Nicholls, 2010)</li>
+        <li><strong>"Accountability upwards"</strong> — SEs are held accountable to resource providers, not their own intentions (Ebrahim, 2003a)</li>
+        <li><strong>Trade-off:</strong> funder requirements vs social mission</li>
+        <li>Multiple funders with different goals = complexity</li>
+        <li>Geographic/cultural distance makes it harder for funders to understand local context</li>
+      </ul>
+    </div>
+
+    <h3>B. Capacity Constraints</h3>
+    <div class="card">
+      <p>Impact assessment requires <strong>intensive data collection and sophisticated analysis</strong> — often beyond the reach of financially-constrained SEs.</p>
+      <ul>
+        <li>SEs operate in dynamic environments — constantly testing and iterating (William Easterly's "searchers")</li>
+        <li><strong>Time/resource trade-off:</strong> serving beneficiaries vs measuring impact</li>
+        <li>Leadership attention split between operations and measurement</li>
+      </ul>
+    </div>
+
+    <h3>C. Attribution Challenges</h3>
+    <div class="card">
+      <p>Hard to calculate impact precisely due to <strong>exogenous factors</strong>.</p>
+      <ul>
+        <li>SEs operate in an ecosystem with other organisations — hard to attribute impact to a specific actor</li>
+        <li>Requires a <strong>counterfactual</strong> — what would have happened WITHOUT the intervention?</li>
+        <li><strong>Gold standard:</strong> Randomized Controlled Trials (RCTs) (Duflo et al., 2008)</li>
+        <li>But RCTs are expensive, require specialized skills, large participation, and long time to plan/execute</li>
+      </ul>
+    </div>
+
+    <h3>D. Standardisation Pressures</h3>
+    <div class="card">
+      <p>External pressures from market actors, industry bodies, and professional networks push toward standardised metrics.</p>
+      <p><strong>Key frameworks:</strong> IRIS, GIIRS, B Lab Certification, UN SDGs</p>
+      <p>Standardisation helps <strong>comparability</strong> but can place additional requirements on SEs.</p>
+      <p><strong>Three responses to standardisation:</strong></p>
+      <table>
+        <tr><th>Response</th><th>Description</th></tr>
+        <tr><td><strong>Resistance</strong></td><td>Ignore or contest demands (defensive, has opportunity cost)</td></tr>
+        <tr><td><strong>Conformity</strong></td><td>Adopt as "best practice", calculated compliance, manage risks</td></tr>
+        <tr><td><strong>Strategic</strong></td><td>Leverage for competitive advantage, attract sophisticated investors</td></tr>
+      </table>
+    </div>
+
+    <div class="highlight-box warning">
+      <div class="label">Warning</div>
+      <p><strong>Danger of pseudo-impact</strong> which is primarily aimed at satisfying stakeholder demands rather than substantively solving fundamental social problems.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>7. Theory of Change — The Core Framework</h2>
+    <p>A <strong>Theory of Change (ToC)</strong> is an evidence-based summary (diagram or statement) of how you believe you can make positive change happen.</p>
+    <ul>
+      <li>Shows the path from <strong>current state (problem)</strong> to <strong>future state (improvement)</strong></li>
+      <li>Converts a business idea into <strong>"provable" social impact</strong></li>
+      <li>Investors, boards, and foundations will require one</li>
+    </ul>
+
+    <h3>The Impact Logic Chain (Ebrahim & Rangan, 2010)</h3>
+    <div class="logic-chain">
+      <span class="step">Inputs</span>
+      <span class="arrow">→</span>
+      <span class="step">Activities</span>
+      <span class="arrow">→</span>
+      <span class="step">Outputs</span>
+      <span class="arrow">→</span>
+      <span class="step">Outcomes</span>
+      <span class="arrow">→</span>
+      <span class="step">Impact</span>
+    </div>
+
+    <h3>Definitions</h3>
+    <table>
+      <tr><th>Element</th><th>Definition</th><th>Example</th></tr>
+      <tr>
+        <td><strong>Outputs</strong></td>
+        <td>Numerical counts of actions, products delivered, people served</td>
+        <td># apps downloaded, # meals served</td>
+      </tr>
+      <tr>
+        <td><strong>Outcomes</strong></td>
+        <td>Meaningful changes for population served — knowledge, skills, attitudes, behaviour, condition</td>
+        <td>Reduction in weight, increase in confidence, % keeping jobs</td>
+      </tr>
+      <tr>
+        <td><strong>Impact</strong></td>
+        <td>Long-term results directly due to outcomes, broader societal effects</td>
+        <td>Reduction in lifestyle diseases, better quality of life</td>
+      </tr>
+    </table>
+
+    <div class="highlight-box">
+      <div class="label">Key Insight</div>
+      <p><strong>Outputs are easy (just count)</strong>, but don't confuse them with actual change. <strong>Outcomes</strong> show change BECAUSE of your program. <strong>Impact</strong> is long-term and attributed to you.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>8. ToC Assumptions</h2>
+    <p>Two types of assumptions underpin every Theory of Change:</p>
+
+    <div class="metric-grid">
+      <div class="card">
+        <div class="card-title">1. Assumptions about the Solution</div>
+        <p>Will the proposed activities work as intended?</p>
+        <p>Does the intervention actually lead to the expected outputs and outcomes?</p>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Assumptions about Context/Beneficiary</div>
+        <p>What pre-existing conditions are necessary?</p>
+        <p>What do we assume about the beneficiaries' circumstances, behaviours, or environment?</p>
+      </div>
+    </div>
+
+    <h3>Example: Financial App for BOP</h3>
+    <p>Designing a financial app for women vs men at the Base of the Pyramid requires different assumptions:</p>
+    <table>
+      <tr><th>Men respond to...</th><th>Women prefer...</th></tr>
+      <tr><td>Data</td><td>Community support</td></tr>
+      <tr><td>Control</td><td>Security</td></tr>
+      <tr><td>Competition</td><td>Education</td></tr>
+      <tr><td>Risk</td><td>Long-term goals</td></tr>
+      <tr><td>Growth</td><td>Socially responsible investing</td></tr>
+    </table>
+
+    <h3>Tips for Identifying Assumptions</h3>
+    <ul>
+      <li>Don't identify too many assumptions</li>
+      <li>Focus on assumptions that are:
+        <ul>
+          <li>Most critical to success</li>
+          <li>Highest risk</li>
+          <li>Most unstable</li>
+          <li>Least known</li>
+          <li>Have implications for long-term sustainability</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>9. ToC Template & Example</h2>
+
+    <h3>Template Structure</h3>
+    <div class="template-box">
+      <strong>Intentionality:</strong> [statement]<br><br>
+      <strong>Problem/Need:</strong> [2-3 key elements]<br><br>
+      <strong>Logic Chain:</strong><br>
+      Activities → Outputs → Outcomes → Impact<br><br>
+      <strong>Assumptions:</strong> [key assumptions]
+    </div>
+
+    <h3>Example: Weight-Loss Travel App</h3>
+    <div class="card">
+      <div class="card-title">Target</div>
+      <p>Professional regular travellers (consultants) involved in food tourism</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Problem/Need</div>
+      <ul>
+        <li>Healthy at home / unhealthy abroad</li>
+        <li>Don't work out when travelling</li>
+        <li>Business trips disrupt healthy routines</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Solution</div>
+      <p>App with local healthy food/gym finder, challenges, premium dietician concierge</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Assumption</div>
+      <p>Solution must be <strong>time neutral</strong> — busy professionals won't adopt solutions that require significant additional time investment</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>10. Analysing the Theory of Change (Mayne's Framework)</h2>
+    <p>Assess your ToC along <strong>five dimensions</strong> — look for both positive AND negative externalities:</p>
+
+    <table>
+      <tr><th>Dimension</th><th>What to Assess</th></tr>
+      <tr>
+        <td><strong>Reach</strong></td>
+        <td>Are intended target groups being reached? Any unexpected groups affected (positively or negatively)?</td>
+      </tr>
+      <tr>
+        <td><strong>Capacity</strong></td>
+        <td>Does the org/stakeholders have capacity to execute? Unexpected gaps or strengths? Ripple effects on local capacity?</td>
+      </tr>
+      <tr>
+        <td><strong>Behavioral Change</strong></td>
+        <td>Unintended behaviour changes? Spillover effects on norms or dependencies?</td>
+      </tr>
+      <tr>
+        <td><strong>Direct Benefits</strong></td>
+        <td>Unexpected positive/negative benefits? Impact on broader ecosystem?</td>
+      </tr>
+      <tr>
+        <td><strong>Wellbeing Change</strong></td>
+        <td>Long-term positive/negative consequences? Influence on indirect stakeholders?</td>
+      </tr>
+    </table>
+
+    <h3>Externality Assessment Grid</h3>
+    <table>
+      <tr><th>Dimension</th><th>Positive Externalities</th><th>Negative Externalities</th></tr>
+      <tr><td>Reach</td><td></td><td></td></tr>
+      <tr><td>Capacity</td><td></td><td></td></tr>
+      <tr><td>Behavioral Change</td><td></td><td></td></tr>
+      <tr><td>Direct Benefits</td><td></td><td></td></tr>
+      <tr><td>Wellbeing Change</td><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>11. SSIR Article — Scaling Social Impact</h2>
+    <p>Summary of key points from the Stanford Social Innovation Review article on scaling social impact.</p>
+
+    <h3>The Challenge</h3>
+    <div class="card">
+      <div class="card-title">Bill Strickland Example</div>
+      <p>MacArthur "genius" grant recipient, envisioned 100 "franchises" of his Manchester Craftsmen's Guild model in 30 years. By 2003, only a few attempts had been made — and most had failed.</p>
+    </div>
+
+    <div class="highlight-box">
+      <div class="label">Lisbeth Schorr</div>
+      <p><em>"We have learned to create small exceptions that change hundreds of lives. But we have not learned how to make the exceptions the rule to change millions."</em></p>
+    </div>
+
+    <h3>Defining an Innovation for Scale</h3>
+    <p>Innovations can take three forms:</p>
+    <table>
+      <tr><th>Form</th><th>Definition</th><th>Example</th></tr>
+      <tr>
+        <td><strong>Organizational Model</strong></td>
+        <td>Overarching structure for mobilizing people and resources</td>
+        <td>Community Foundations (Frederick Goff, 1914)</td>
+      </tr>
+      <tr>
+        <td><strong>Program</strong></td>
+        <td>Integrated set of actions serving a specific purpose</td>
+        <td>Boot Camp for New Dads — detailed package, 180+ sites</td>
+      </tr>
+      <tr>
+        <td><strong>Principles</strong></td>
+        <td>General guidelines and values</td>
+        <td>KIPP's Five Pillars — flexible application, 32 schools</td>
+      </tr>
+    </table>
+
+    <h3>Key Questions Before Scaling</h3>
+    <ul>
+      <li>What makes the approach distinctive?</li>
+      <li>What is essential to success?</li>
+      <li>What internal/external factors play supporting roles?</li>
+      <li>What could change without jeopardizing impact?</li>
+      <li>How transferable is it?</li>
+    </ul>
+
+    <div class="card">
+      <div class="card-title">Bradach's "Minimum Critical Specification"</div>
+      <p>Define the <strong>fewest elements possible</strong> to produce the desired impact. Don't over-specify — identify only what's essential.</p>
+    </div>
+
+    <h3>Mechanisms for Spreading Impact (Continuum)</h3>
+    <table>
+      <tr><th>Mechanism</th><th>Description</th><th>Control</th><th>Resources</th></tr>
+      <tr>
+        <td><strong>Dissemination</strong></td>
+        <td>Provide information and technical assistance</td>
+        <td>Low</td>
+        <td>Low</td>
+      </tr>
+      <tr>
+        <td><strong>Affiliation</strong></td>
+        <td>Formal network agreements (loose coalition to franchise-like)</td>
+        <td>Medium</td>
+        <td>Medium</td>
+      </tr>
+      <tr>
+        <td><strong>Branching</strong></td>
+        <td>Create local sites through one large org (company-owned stores)</td>
+        <td>High</td>
+        <td>High</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>12. Key Takeaways</h2>
+    <div class="card">
+      <ul>
+        <li><strong>Impact measurement serves both PROVE and IMPROVE purposes</strong></li>
+        <li><strong>Start with founder intentionality</strong> but navigate stakeholder, capacity, attribution, and standardisation challenges</li>
+        <li><strong>Theory of Change is the core tool</strong> — logic chain from inputs to impact</li>
+        <li><strong>Assumptions (solution + context)</strong> underpin every ToC</li>
+        <li><strong>Analyse ToC for positive AND negative externalities</strong> across reach, capacity, behaviour, benefits, wellbeing</li>
+        <li><strong>When scaling impact</strong>, consider how to define the innovation (org/program/principles) and mechanism (dissemination/affiliation/branching)</li>
+        <li><strong>Minimum critical specification:</strong> define only what's necessary</li>
+      </ul>
+    </div>
+
+    <div class="highlight-box">
+      <div class="label">Remember</div>
+      <p>Outputs ≠ Outcomes ≠ Impact. Counting activities is easy. Proving lasting change is hard — but that's what separates social enterprises that scale impact from those that just scale operations.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>13. Key References</h2>
+    <div class="card">
+      <p>Roche (1999)</p>
+      <p>Clifford (2014)</p>
+      <p>Emerson et al. (2000)</p>
+      <p>Kolodinsky et al. (2006)</p>
+      <p>Maas and Liket (2011)</p>
+      <p>Nicholls (2009, 2010)</p>
+      <p>Dees (2007)</p>
+      <p>Paton (2003)</p>
+      <p>Ebrahim & Rangan (2010, 2014)</p>
+      <p>Duflo et al. (2008)</p>
+      <p>Moxham (2010)</p>
+      <p>Collins & Porras — BHAGs</p>
+      <p>Edmans (2021)</p>
+      <p>Hamel — Strategy as Stretch</p>
+      <p>William Easterly — Searchers</p>
+      <p>Bradach — Minimum Critical Specification</p>
+      <p>SSIR: Dees, Anderson, Wei-Skillern — "Scaling Social Impact"</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Social Innovation &amp; Design — Study Hub · Built with 🐱 by Robin
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('theme-icon').textContent = saved === 'dark' ? '☀️' : '🌙';
+  });
+})();
+
+function slugifyHeading(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function initSectionNav() {
+  const navLinks = document.getElementById('section-nav-links');
+  if (!navLinks) return;
+
+  let headings = Array.from(document.querySelectorAll('.section h2'));
+  if (!headings.length) {
+    headings = Array.from(document.querySelectorAll('.section-title, h2'));
+  }
+  if (!headings.length) return;
+
+  headings.forEach((heading) => {
+    if (!heading.id) {
+      heading.id = slugifyHeading(heading.textContent || '');
+    }
+  });
+
+  navLinks.innerHTML = '';
+  headings.forEach((heading) => {
+    const link = document.createElement('a');
+    link.className = 'section-link';
+    link.href = `#${heading.id}`;
+    link.textContent = heading.textContent || '';
+    navLinks.appendChild(link);
+  });
+
+  const linkMap = new Map();
+  navLinks.querySelectorAll('a').forEach((link) => {
+    const targetId = link.getAttribute('href').slice(1);
+    linkMap.set(targetId, link);
+    link.addEventListener('click', () => setActive(targetId));
+  });
+
+  function setActive(id) {
+    linkMap.forEach((link) => {
+      link.classList.remove('active');
+      link.removeAttribute('aria-current');
+    });
+    const activeLink = linkMap.get(id);
+    if (activeLink) {
+      activeLink.classList.add('active');
+      activeLink.setAttribute('aria-current', 'true');
+    }
+  }
+
+  setActive(headings[0].id);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActive(entry.target.id);
+        }
+      });
+    },
+    { rootMargin: '-20% 0px -65% 0px', threshold: [0, 0.1, 0.5] }
+  );
+
+  headings.forEach((heading) => observer.observe(heading));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initSectionNav();
+});
+
+</script>
+</body>
+</html>
