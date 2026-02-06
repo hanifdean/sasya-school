@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLMs vs Marketplaces: Who Gets Disrupted?</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181b24;
+    --surface-2: #1f2330;
+    --border: rgba(255,255,255,0.06);
+    --text: #e8e6e1;
+    --text-muted: #8a8b91;
+    --accent: #6366f1;
+    --accent-glow: rgba(99,102,241,0.15);
+    --green: #34d399;
+    --green-glow: rgba(52,211,153,0.12);
+    --yellow: #fbbf24;
+    --yellow-glow: rgba(251,191,36,0.12);
+    --orange: #fb923c;
+    --orange-glow: rgba(251,146,60,0.12);
+    --red: #f87171;
+    --red-glow: rgba(248,113,113,0.12);
+    --gold: #f5c542;
+  }
+
+  [data-theme="light"] {
+    --bg: #f8f6f2;
+    --surface: #ffffff;
+    --surface-2: #f5f3ef;
+    --border: rgba(0,0,0,0.08);
+    --text: #2c2a26;
+    --text-muted: #6b6560;
+    --accent: #4f46e5;
+    --accent-glow: rgba(79,70,229,0.08);
+    --green: #059669;
+    --green-glow: rgba(5,150,105,0.08);
+    --yellow: #d97706;
+    --yellow-glow: rgba(217,119,6,0.08);
+    --orange: #ea580c;
+    --orange-glow: rgba(234,88,12,0.08);
+    --red: #dc2626;
+    --red-glow: rgba(220,38,38,0.08);
+    --gold: #b45309;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .container {
+    max-width: 720px;
+    width: 100%;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s ease-out;
+  }
+
+  .header .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 6px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* Section Cards */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s ease-out both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.15s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.25s; }
+  .section:nth-child(5) { animation-delay: 0.3s; }
+  .section:nth-child(6) { animation-delay: 0.35s; }
+
+  .section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section h2 .emoji {
+    font-size: 22px;
+  }
+
+  .section .desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .section p {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .section p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* TLDR Hero */
+  .tldr-hero {
+    background: linear-gradient(135deg, var(--accent) 0%, #4338ca 100%);
+    border: none;
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s ease-out 0.1s both;
+  }
+
+  .tldr-hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .tldr-hero h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+
+  .tldr-hero p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* Factor Cards */
+  .factor-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .factor-card {
+    background: var(--surface-2);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .factor-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+  .factor-card .subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  /* Spectrum Bar */
+  .spectrum {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 4px;
+    display: flex;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .spectrum-item {
+    flex: 1;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .spectrum-item.vulnerable {
+    background: var(--red-glow);
+    color: var(--red);
+  }
+
+  .spectrum-item.moderate {
+    background: var(--yellow-glow);
+    color: var(--yellow);
+  }
+
+  .spectrum-item.defensible {
+    background: var(--green-glow);
+    color: var(--green);
+  }
+
+  .spectrum-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    padding: 0 4px;
+  }
+
+  /* Difficulty Levels */
+  .difficulty-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .difficulty-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: var(--surface);
+    border-radius: 10px;
+  }
+
+  .difficulty-badge {
+    flex-shrink: 0;
+    width: 60px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .difficulty-badge.easy {
+    background: var(--red-glow);
+    color: var(--red);
+  }
+
+  .difficulty-badge.medium {
+    background: var(--yellow-glow);
+    color: var(--yellow);
+  }
+
+  .difficulty-badge.hard {
+    background: var(--green-glow);
+    color: var(--green);
+  }
+
+  .difficulty-content {
+    flex: 1;
+  }
+
+  .difficulty-content .title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .difficulty-content .examples {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* Management Spectrum */
+  .management-spectrum {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .management-item {
+    text-align: center;
+    padding: 14px 8px;
+    background: var(--surface);
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .management-item::after {
+    content: '→';
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .management-item:last-child::after {
+    display: none;
+  }
+
+  .management-item .icon {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .management-item .label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* Engagement Grid */
+  .engagement-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .engagement-item {
+    padding: 16px;
+    background: var(--surface);
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .engagement-item .metric {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .engagement-item .good {
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .engagement-item .bad {
+    font-size: 13px;
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  /* Outcome Matrix */
+  .outcome-matrix {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .outcome-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: var(--surface-2);
+    border-radius: 12px;
+    border-left: 4px solid;
+  }
+
+  .outcome-row.extinction {
+    border-left-color: var(--red);
+    background: var(--red-glow);
+  }
+
+  .outcome-row.erosion {
+    border-left-color: var(--orange);
+    background: var(--orange-glow);
+  }
+
+  .outcome-row.pressure {
+    border-left-color: var(--yellow);
+    background: var(--yellow-glow);
+  }
+
+  .outcome-row.safe {
+    border-left-color: var(--green);
+    background: var(--green-glow);
+  }
+
+  .outcome-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .outcome-content {
+    flex: 1;
+  }
+
+  .outcome-content .level {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .outcome-row.extinction .level { color: var(--red); }
+  .outcome-row.erosion .level { color: var(--orange); }
+  .outcome-row.pressure .level { color: var(--yellow); }
+  .outcome-row.safe .level { color: var(--green); }
+
+  .outcome-content .examples {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .outcome-content .why {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Playbook */
+  .playbook-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .playbook-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px;
+    background: var(--surface-2);
+    border-radius: 12px;
+  }
+
+  .playbook-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .playbook-content .title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .playbook-content .detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Investment Framing */
+  .framing-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .framing-item {
+    padding: 16px;
+    background: var(--surface-2);
+    border-radius: 12px;
+  }
+
+  .framing-item .title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .framing-item .detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Jargon Decoder */
+  .jargon-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .jargon-def {
+    padding: 14px;
+    background: var(--surface-2);
+    border-radius: 10px;
+    scroll-margin-top: 24px;
+  }
+
+  .jargon-def .term {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .jargon-def .definition {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .jargon-def:target {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    animation: jargon-flash 1.2s ease;
+  }
+
+  @keyframes jargon-flash {
+    0%, 100% { outline-color: transparent; }
+    20%, 80% { outline-color: var(--accent); }
+  }
+
+  /* Inline jargon links */
+  .jargon {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1.5px dotted var(--accent);
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .jargon:hover {
+    color: var(--green);
+    border-color: var(--green);
+  }
+  .jargon-back {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-left: 6px;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .jargon-back:hover { opacity: 1; color: var(--accent); }
+
+  /* Source Footer */
+  .source-footer {
+    text-align: center;
+    margin-top: 36px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    animation: fadeUp 0.6s ease-out 0.5s both;
+  }
+
+  .source-footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .source-footer a:hover {
+    text-decoration: underline;
+  }
+
+  .source-footer .author {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+
+  /* Top Bar */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto 0;
+    padding: 0 0 16px 0;
+  }
+  .back-link {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .theme-toggle {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    body { padding: 24px 16px; }
+    .header h1 { font-size: 26px; }
+    .management-spectrum { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .management-item::after { display: none; }
+    .engagement-grid { grid-template-columns: 1fr; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="top-bar">
+  <a href="../" class="back-link">← Back to Study Hub</a>
+  <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+    <span id="theme-icon">☀️</span>
+  </button>
+</div>
+
+<div class="header">
+  <div class="tag">Framework · AI Disruption</div>
+  <h1>LLMs vs Marketplaces: Who Gets Disrupted?</h1>
+  <p>A framework for predicting which marketplaces survive the AI agent era — and which become obsolete.</p>
+</div>
+
+<!-- Robin's TLDR -->
+<div class="tldr-hero">
+  <h2>🐱 Robin's TLDR</h2>
+  <p>AI agents (ChatGPT, Gemini) are coming for marketplaces. But not all marketplaces are equally vulnerable. The ones that survive are those that do things LLMs won't: physical delivery, risk underwriting, and managing hard-to-aggregate supply. <strong>DoorDash is actually safe. Expedia is toast.</strong> This framework helps you predict which is which.</p>
+</div>
+
+<!-- The Three Factors -->
+<div class="section">
+  <h2><span class="emoji">🔬</span> The Three Factors</h2>
+  <div class="desc">Three dimensions determine how defensible a marketplace is against AI agent disruption.</div>
+
+  <div class="factor-grid">
+    <!-- Factor 1: Supply Aggregation -->
+    <div class="factor-card">
+      <h3>Factor 1: Supply Aggregation Difficulty</h3>
+      <div class="subtitle">How hard is it to gather all suppliers onto one platform?</div>
+      <div class="difficulty-list">
+        <div class="difficulty-item">
+          <div class="difficulty-badge easy">Easy</div>
+          <div class="difficulty-content">
+            <div class="title">Large businesses, standardized offerings</div>
+            <div class="examples">Hotels, flights — few players, APIs exist, LLMs can scrape easily</div>
+          </div>
+        </div>
+        <div class="difficulty-item">
+          <div class="difficulty-badge medium">Medium</div>
+          <div class="difficulty-content">
+            <div class="title">Fragmented but somewhat standardized</div>
+            <div class="examples">Restaurants, retail — many players but offerings are somewhat comparable</div>
+          </div>
+        </div>
+        <div class="difficulty-item">
+          <div class="difficulty-badge hard">Hard</div>
+          <div class="difficulty-content">
+            <div class="title">Fragmented + heterogeneous + <a href="#jargon-illegibility" class="jargon">illegible</a></div>
+            <div class="examples">Airbnb hosts, local services, handmade goods — unique, hard to compare</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Factor 2: Management Depth -->
+    <div class="factor-card">
+      <h3>Factor 2: Degree of <a href="#jargon-management" class="jargon">Marketplace Management</a></h3>
+      <div class="subtitle">More management = more defensible (things LLMs won't do)</div>
+      <div class="management-spectrum">
+        <div class="management-item">
+          <div class="icon">🔍</div>
+          <div class="label">Search only</div>
+        </div>
+        <div class="management-item">
+          <div class="icon">💳</div>
+          <div class="label">Transaction facilitation</div>
+        </div>
+        <div class="management-item">
+          <div class="icon">🛡️</div>
+          <div class="label">Risk management</div>
+        </div>
+        <div class="management-item">
+          <div class="icon">🚚</div>
+          <div class="label">Service delivery</div>
+        </div>
+      </div>
+      <div class="spectrum-label">
+        <span>🔴 Vulnerable</span>
+        <span>🟢 Defensible</span>
+      </div>
+    </div>
+
+    <!-- Factor 3: Customer Engagement -->
+    <div class="factor-card">
+      <h3>Factor 3: Customer Engagement</h3>
+      <div class="subtitle">Two dimensions: frequency and <a href="#jargon-consideration" class="jargon">consideration</a></div>
+      <div class="engagement-grid">
+        <div class="engagement-item">
+          <div class="metric">Transaction Frequency</div>
+          <div class="good">↑ High = Defensible</div>
+          <div class="bad">↓ Low = Exposed</div>
+        </div>
+        <div class="engagement-item">
+          <div class="metric">Purchase Consideration</div>
+          <div class="good">↓ Low = Defensible</div>
+          <div class="bad">↑ High = Exposed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Outcome Matrix -->
+<div class="section">
+  <h2><span class="emoji">📊</span> The Outcome Matrix</h2>
+  <div class="desc">Where different marketplaces land based on the three factors.</div>
+
+  <div class="outcome-matrix">
+    <div class="outcome-row extinction">
+      <div class="outcome-icon">🔴</div>
+      <div class="outcome-content">
+        <div class="level">Extinction Risk</div>
+        <div class="examples">Expedia, TripAdvisor, hotel aggregators</div>
+        <div class="why">Easy <a href="#jargon-aggregation" class="jargon">supply aggregation</a>, light <a href="#jargon-management" class="jargon">management</a> (just search), low frequency + high <a href="#jargon-consideration" class="jargon">consideration</a>. LLMs can do everything these do, better.</div>
+      </div>
+    </div>
+
+    <div class="outcome-row erosion">
+      <div class="outcome-icon">🟠</div>
+      <div class="outcome-content">
+        <div class="level">Economics Erosion</div>
+        <div class="examples">Airbnb, Thumbtack, Angi</div>
+        <div class="why">Hard supply (<a href="#jargon-illegibility" class="jargon">illegible</a> hosts, local services) protects them somewhat, but high <a href="#jargon-consideration" class="jargon">consideration</a> use cases mean users will shop around via AI.</div>
+      </div>
+    </div>
+
+    <div class="outcome-row pressure">
+      <div class="outcome-icon">🟡</div>
+      <div class="outcome-content">
+        <div class="level">Some Pressure</div>
+        <div class="examples">Amazon, Walmart</div>
+        <div class="why">Heavily <a href="#jargon-managed" class="jargon">managed</a> (logistics, fulfillment) but ad revenue is vulnerable. If LLMs route purchases, $60B ad business at risk.</div>
+      </div>
+    </div>
+
+    <div class="outcome-row safe">
+      <div class="outcome-icon">🟢</div>
+      <div class="outcome-content">
+        <div class="level">Mostly Safe</div>
+        <div class="examples">DoorDash, UberEats</div>
+        <div class="why">Heavy <a href="#jargon-management" class="jargon">management</a> + service delivery + high frequency. LLMs won't run restaurants or deliver food.</div>
+      </div>
+    </div>
+
+    <div class="outcome-row safe">
+      <div class="outcome-icon">🟢</div>
+      <div class="outcome-content">
+        <div class="level">Unaffected</div>
+        <div class="examples">Uber, Lyft</div>
+        <div class="why">Heavy <a href="#jargon-management" class="jargon">management</a> + high frequency + low <a href="#jargon-consideration" class="jargon">consideration</a>. You need a ride NOW, not a 10-minute AI comparison.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Playbook -->
+<div class="section">
+  <h2><span class="emoji">🎯</span> The Playbook — How Marketplaces Can Defend</h2>
+  <div class="desc">Four strategies from the article for marketplace survival.</div>
+
+  <div class="playbook-list">
+    <div class="playbook-item">
+      <div class="playbook-num">1</div>
+      <div class="playbook-content">
+        <div class="title">Do things LLMs won't</div>
+        <div class="detail">Returns, guarantees, financing, physical logistics. Reduces margins but LLMs won't follow you into operational complexity. This is the TSMC moat applied to marketplaces.</div>
+      </div>
+    </div>
+
+    <div class="playbook-item">
+      <div class="playbook-num">2</div>
+      <div class="playbook-content">
+        <div class="title">Build AI search natively</div>
+        <div class="detail">Don't be first, but be ready to fast-follow. Can't let LLMs have a better search experience than your own app. Match the UX or lose the user.</div>
+      </div>
+    </div>
+
+    <div class="playbook-item">
+      <div class="playbook-num">3</div>
+      <div class="playbook-content">
+        <div class="title">If you have high market share, play hardball</div>
+        <div class="detail">Amazon has leverage. ChatGPT needs Amazon more than Amazon needs ChatGPT. Don't give away data or economics easily. Negotiate from strength.</div>
+      </div>
+    </div>
+
+    <div class="playbook-item">
+      <div class="playbook-num">4</div>
+      <div class="playbook-content">
+        <div class="title">Don't get greedy</div>
+        <div class="detail">Amazon's $60B ad business degrades search experience. That's now a vulnerability — users might prefer LLM shopping with no ads. Disrupt yourself before LLMs do.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Robin's Investment Framing -->
+<div class="section">
+  <h2><span class="emoji">💡</span> Robin's Investment Framing</h2>
+  <div class="desc">Connecting this framework to broader investment themes.</div>
+
+  <div class="framing-list">
+    <div class="framing-item">
+      <div class="title">"Doing things LLMs won't" moat = capital + ops intensity</div>
+      <div class="detail">Same as TSMC's fab moat. Physical/operational complexity is durable. It takes years and billions to build logistics networks. AI can't shortcut atoms.</div>
+    </div>
+
+    <div class="framing-item">
+      <div class="title">"Supply <a href="#jargon-illegibility" class="jargon">illegibility</a>" moat = data flywheel</div>
+      <div class="detail">Years of making supply legible (Airbnb photos, reviews, trust signals) is hard to replicate. This is proprietary data that took a decade to accumulate.</div>
+    </div>
+
+    <div class="framing-item">
+      <div class="title">"Ad margin vulnerability" = don't get greedy</div>
+      <div class="detail">Premium extraction invites disruption. Companies that tax their users with bad UX (ads, promoted listings) create openings for AI-native alternatives.</div>
+    </div>
+
+    <div class="framing-item">
+      <div class="title">Variant view example</div>
+      <div class="detail">Consensus says "DoorDash problem" — AI will disintermediate them. Reality: DoorDash is one of the safest. They do physical delivery, handle restaurant operations, manage real-time logistics. LLMs won't deliver your burrito.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Jargon Decoder -->
+<div class="section">
+  <h2><span class="emoji">📖</span> Jargon Decoder</h2>
+  <div class="jargon-list">
+    <div class="jargon-def" id="jargon-management">
+      <div class="term">Marketplace management <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a></div>
+      <div class="definition">The jobs a marketplace does beyond connecting buyer/seller — payments, trust, customer service, logistics, risk management.</div>
+    </div>
+    <div class="jargon-def" id="jargon-aggregation">
+      <div class="term">Supply aggregation <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a></div>
+      <div class="definition">Gathering all suppliers onto one platform. Easier when suppliers are large businesses with APIs; harder when supply is fragmented individuals.</div>
+    </div>
+    <div class="jargon-def" id="jargon-illegibility">
+      <div class="term">Illegibility <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a></div>
+      <div class="definition">When offerings are hard to understand or compare — unique, non-standardized, requiring photos/reviews/trust signals to evaluate. Airbnb listings are illegible; hotel rooms are legible.</div>
+    </div>
+    <div class="jargon-def" id="jargon-leadgen">
+      <div class="term">Lead gen marketplace <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a></div>
+      <div class="definition">Light-touch model: just generates leads for suppliers, doesn't facilitate the actual transaction. Most vulnerable to LLM disruption.</div>
+    </div>
+    <div class="jargon-def" id="jargon-managed">
+      <div class="term">Managed marketplace <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a></div>
+      <div class="definition">Heavy-touch model: handles transaction, risk, sometimes physical delivery. More defensible because LLMs won't take on liability or move atoms.</div>
+    </div>
+    <div class="jargon-def" id="jargon-consideration">
+      <div class="term">Purchase consideration <a href="#" class="jargon-back" onclick="history.back();return false;">↩ back</a></div>
+      <div class="definition">How much research/thought goes into a buying decision. High consideration (vacation booking) = users will comparison shop via AI. Low consideration (lunch) = users want speed, not optimization.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Source -->
+<div class="source-footer">
+  <a href="https://www.danhock.co/p/llms-vs-marketplaces" target="_blank" rel="noopener">📄 Original Article: LLMs vs Marketplaces →</a>
+  <div class="author">Dan Hock · danhock.co · Feb 2026</div>
+</div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-icon').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', next);
+}
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.addEventListener('DOMContentLoaded', () => {
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    });
+  }
+})();
+</script>
+</body>
+</html>
